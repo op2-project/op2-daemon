@@ -1,0 +1,5 @@
+
+[op2d]
+; port where the admin website will be served
+; web_port = 8088
+
