@@ -45,7 +45,8 @@ def set_state(obj, state):
 
 @app.route('/')
 def index():
-    return 'OP2d version %s API' % op2d.__version__
+    message = 'OP2d version %s APIv1' % op2d.__version__
+    return json.jsonify({'message': message})
 
 
 @app.route('/about')
