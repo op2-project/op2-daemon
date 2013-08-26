@@ -49,11 +49,6 @@ def index():
     return json.jsonify({'message': message})
 
 
-@app.route('/about')
-def about():
-    return 'TODO'
-
-
 # Account management
 
 @app.route('/accounts', methods=['GET', 'POST'])
