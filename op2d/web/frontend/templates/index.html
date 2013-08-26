@@ -233,6 +233,31 @@
                                 </div>
                             </form>
                         </div>
+                        <div class="tab-pane" id="account_network">
+                            <form class="form-horizontal" id="account_network_form" role="form">
+
+                                <legend>Network Settings</legend>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-3 col-lg-10">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name='enabled'> Use ICE
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="relay_transport_general" class="col-lg-3 control-label">MSRP Transport</label>
+                                    <div class="col-lg-9">
+                                        <select name="relay_transport_general">
+                                            <option value="Optional">TLS</option>
+                                            <option value="Disabled">TCP</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
