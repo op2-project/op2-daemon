@@ -3,7 +3,7 @@ import platform
 import traceback
 
 from flask import Flask, abort, json, request
-from sipsimple.account import Account, AccountManager
+from sipsimple.account import Account, BonjourAccount, AccountManager
 from sipsimple.configuration import DefaultValue, DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
 from sipsimple.core import Engine
@@ -114,6 +114,18 @@ def handle_account(account_id):
         except Exception:
             abort(400)
         return ''
+
+
+@app.route('/accounts/<account_id>/reregister')
+def reregister_account(account_id):
+    try:
+        account = AccountManager().get_account(account_id)
+    except KeyError:
+        abort(404)
+    if account is BonjourAccount():
+        abort(403)
+    account.reregister()
+    return ''
 
 
 # General settings management
