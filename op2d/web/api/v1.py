@@ -1,10 +1,12 @@
 
+import platform
 import traceback
 
 from flask import Flask, abort, json, request
 from sipsimple.account import Account, AccountManager
 from sipsimple.configuration import DefaultValue, DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
+from sipsimple.core import Engine
 
 import op2d
 
@@ -134,4 +136,32 @@ def handle_settings():
             abort(400)
         settings.save()
         return json.jsonify(get_state(settings))
+
+
+# System information
+
+@app.route('/system/info')
+def system_info():
+    info = {}
+    info['machine_type'] = platform.machine()
+    info['network_name'] = platform.node()
+    info['python_version'] = platform.python_version()
+    info['platform'] = platform.platform()
+    return json.jsonify({'info': info})
+
+
+@app.route('/system/audio_codecs')
+def audio_codecs():
+    engine = Engine()
+    return json.jsonify({'audio_codecs': engine.available_codecs})
+
+
+@app.route('/system/audio_devices')
+def audio_devices():
+    engine = Engine()
+    devices = {'input': None, 'output': None}
+    devices['input'] = engine.input_devices
+    devices['output'] = engine.output_devices
+    return json.jsonify({'devices': devices})
+
 
