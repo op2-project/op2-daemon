@@ -9,6 +9,7 @@ from sipsimple.configuration.settings import SIPSimpleSettings
 from sipsimple.core import Engine
 
 import op2d
+from op2d.accounts import AccountModel
 
 __all__ = ['app']
 
@@ -126,6 +127,24 @@ def reregister_account(account_id):
         abort(403)
     account.reregister()
     return ''
+
+
+@app.route('/accounts/<account_id>/info')
+def account_info(account_id):
+    try:
+        account = AccountManager().get_account(account_id)
+    except KeyError:
+        abort(404)
+    model = AccountModel()
+    registration = {}
+    info = model.get_account(account.id)
+    if info is not None:
+        registration['state'] = info.registration_state
+        registration['registrar'] = info.registrar
+    else:
+        registration['state'] = 'unknown'
+        registration['registrar'] = None
+    return json.jsonify({'info': {'registration': registration}})
 
 
 # General settings management

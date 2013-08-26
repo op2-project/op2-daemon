@@ -8,6 +8,7 @@ from sipsimple.storage import FileStorage
 from threading import Event
 from zope.interface import implements
 
+from op2d.accounts import AccountModel
 from op2d.resources import ApplicationData
 from op2d.web import WebHandler
 
@@ -21,14 +22,17 @@ class OP2Daemon(object):
     def __init__(self):
         self.application = SIPApplication()
         self.stop_event = Event()
+        self.account_model = AccountModel()
         self.web_handler = None
 
     def start(self):
+        self.account_model.start()
         notification_center = NotificationCenter()
         notification_center.add_observer(self, sender=self.application)
         self.application.start(FileStorage(ApplicationData.directory))
 
     def stop(self):
+        self.account_model.stop()
         self.application.stop()
         self.application.thread.join()
         self.stop_event.set()
