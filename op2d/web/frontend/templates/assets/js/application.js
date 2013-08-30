@@ -65,6 +65,22 @@ function populateAccountForms(frm, account_id) {
     });
 }
 
+function populateSystemTab() {
+    $('#system_info').empty();
+
+    $.getJSON('api/v1/system/info', function(data) {
+        $('#system_info').append("<dl class='dl-horizontal' id='system_info_list'></dl>");
+        $.each(data.info, function(key,value2) {
+            //console.log(key +" "+ value2);
+            $('#system_info_list').append("<dt>"+
+                        key +
+                        "</dt><dd>"+ value2 +
+                      "</dd>");
+        });
+        //$('#system_info').append("</dl>");
+    });
+}
+
 $(document).ready(function() {
     getAccounts('account_list','account_info_form');
     var selectBox = $("select").selectBoxIt();
@@ -72,5 +88,14 @@ $(document).ready(function() {
         change: function( event, ui ) {
             $("#reset_audio_codecs").removeClass("btn-disabled").removeAttr("disabled");
         }
+    });
+
+      $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        console.log(e.target); // activated tab
+        if ( $(e.target).attr('href') == "#system_tab" ) {
+        // if (e.target.id=="system_tab"){
+            populateSystemTab();
+        }
+        //e.relatedTarget // previous tab
     });
 });
