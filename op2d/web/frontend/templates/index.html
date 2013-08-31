@@ -61,17 +61,11 @@
             <div class="tab-content">
                 <div id='account_tab' class="tab-pane active">
                     <div class="page-header">
-                        <h1>Accounts</h1>
+                        <h1><i class='icon-group'></i> Accounts</h1>
                     </div>
                     <div class='row'>
                         <div class="col-md-3 bs-sidebar">
                             <ul id="account_list" class="nav nav-list bs-sidenav">
-                                <li style='margin-right:4px'>
-                                    <div id='account_buttons' class="btn-group btn-group-xs pull-right">
-                                        <button id='add_account' class='btn btn-primary'><i class='icon-fixed-width icon-plus'></i></button>
-                                        <button id='remove_account' class='btn btn-default btn-disabled' disabled><i class=' icon-fixed-width icon-minus'></i></button>
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                         <div class="col-md-9">
@@ -100,13 +94,13 @@
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-2 control-label">Display name</label>
                                             <div class="col-lg-10">
-                                                <input type="text" class="form-control" name="display_name" placeholder="Display name" value='test'>
+                                                <input type="text" class="form-control" name="display_name" placeholder="Display name" value='test' autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="inputPassword1" class="col-lg-2 control-label">Password</label>
                                             <div class="col-lg-10">
-                                                <input type="password" class="form-control" id="inputPassword1" placeholder="Password">
+                                                <input type="password" class="form-control" id="inputPassword1" placeholder="Password" autocomplete="off">
                                             </div>
                                         </div>
                                     </form>
@@ -238,6 +232,7 @@
                                         </div>
                                     </form>
                                 </div>
+
                                 <div class="tab-pane" id="account_network">
                                     <form class="form-horizontal" id="account_network_form" role="form">
 
@@ -352,6 +347,44 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add Account</h4>
+                </div>
+                <form class="form-horizontal" id="account_add_form" role="form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Display name</label>
+                            <div class="col-lg-9">
+                                <input type="text" name='display_name' class="form-control" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">SIP address</label>
+                            <div class="col-lg-9">
+                                <input type="text" name='id' class="form-control" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">Password</label>
+                            <div class="col-lg-9">
+                                <input type="password" name='password' class="form-control" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Add">
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <div id="footer">
         <div class="container">
