@@ -7,6 +7,7 @@ from sipsimple.account import Account, BonjourAccount, AccountManager
 from sipsimple.configuration import DefaultValue, DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
 from sipsimple.core import Engine
+from werkzeug.routing import BaseConverter
 
 import op2d
 from op2d.accounts import AccountModel
@@ -15,6 +16,13 @@ __all__ = ['app']
 
 
 app = Flask('api_v1')
+
+
+class SipUriConverter(BaseConverter):
+    regex = '.*?'
+    weight = 300
+
+app.url_map.converters['sip'] = SipUriConverter
 
 
 def get_state(obj):
@@ -86,7 +94,7 @@ def handle_accounts():
         return json.jsonify(get_state(account)), 201
 
 
-@app.route('/accounts/<account_id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/accounts/<sip:account_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_account(account_id):
     try:
         account = AccountManager().get_account(account_id)
@@ -117,7 +125,7 @@ def handle_account(account_id):
         return ''
 
 
-@app.route('/accounts/<account_id>/reregister')
+@app.route('/accounts/<sip:account_id>/reregister')
 def reregister_account(account_id):
     try:
         account = AccountManager().get_account(account_id)
@@ -129,7 +137,7 @@ def reregister_account(account_id):
     return ''
 
 
-@app.route('/accounts/<account_id>/info')
+@app.route('/accounts/<sip:account_id>/info')
 def account_info(account_id):
     try:
         account = AccountManager().get_account(account_id)
