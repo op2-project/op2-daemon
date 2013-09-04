@@ -2,15 +2,18 @@
 import platform
 import traceback
 
+from application import log
 from flask import Flask, abort, json, request
 from sipsimple.account import Account, BonjourAccount, AccountManager
 from sipsimple.configuration import DefaultValue, DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
 from sipsimple.core import Engine
+from sipsimple.streams import AudioStream
 from werkzeug.routing import BaseConverter
 
 import op2d
 from op2d.accounts import AccountModel
+from op2d.sessions import SessionManager
 
 __all__ = ['app']
 
@@ -203,4 +206,26 @@ def audio_devices():
     devices['output'] = engine.output_devices
     return json.jsonify({'devices': devices})
 
+
+# Sessions
+
+@app.route('/sessions/dial')
+def dial():
+    to = request.args.get('to', None)
+    if to is None:
+        abort(400)
+    account_id = request.args.get('from', None)
+    account = None
+    if account_id is not None:
+        try:
+            account = AccountManager().get_account(account_id)
+        except KeyError:
+            pass
+    try:
+        SessionManager().start_call(None, to, [AudioStream()], account=account)
+    except Exception:
+        log.error('Starting call to %s' % to)
+        log.err()
+        abort(400)
+    return ''
 
