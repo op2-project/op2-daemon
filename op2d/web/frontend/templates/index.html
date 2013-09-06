@@ -48,8 +48,8 @@
                     <ul class="nav navbar-nav">
                         <li class='active'><a href="#account_tab" data-toggle="tab"><i class='icon-group'></i> Accounts</a></li>
                         <li><a href="#"><i class='icon-headphones'></i> Audio</a></li>
-                        <li><a href="#"><i class='icon-keyboard'></i> Chat</a></li>
-                        <li><a href="#"><i class='icon-upload-alt'></i> File Transfer</a></li>
+<!--                         <li><a href="#"><i class='icon-keyboard'></i> Chat</a></li>
+                        <li><a href="#"><i class='icon-upload-alt'></i> File Transfer</a></li> -->
                         <li><a href="#system_tab" data-toggle="tab"><i class='icon-desktop'></i> System</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
@@ -100,7 +100,7 @@
                                         <div class="form-group">
                                             <label for="inputPassword1" class="col-lg-2 control-label">Password</label>
                                             <div class="col-lg-10">
-                                                <input type="password" class="form-control" id="inputPassword1" placeholder="Password" autocomplete="off">
+                                                <input type="password" class="form-control" id="inputPassword1" name="password" placeholder="Password" autocomplete="off">
                                             </div>
                                         </div>
                                     </form>
@@ -141,8 +141,8 @@
                                 <div class="tab-pane" id="account_server">
                                     <form class="form-horizontal" id="account_server_form" role="form">
 
-                                        <legend>Sip Proxy</legend>
-                                        <div class="form-group smaller">
+                                        <legend>SIP Proxy</legend>
+                                        <div class="form-group">
                                             <div class="col-lg-offset-3 col-lg-9">
                                                 <div class="checkbox">
                                                     <label>
@@ -164,9 +164,9 @@
                                             <label for="relay_transport" class="col-lg-1 control-label">Transport</label>
                                             <div class="col-lg-2">
                                                 <select name="relay_transport">
-                                                    <option value="Disabled">UDP</option>
-                                                    <option value="Disabled">TCP</option>
-                                                    <option value="Optional">TLS</option>
+                                                    <option value="UDP">UDP</option>
+                                                    <option value="TCP">TCP</option>
+                                                    <option value="TLS">TLS</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -177,8 +177,8 @@
                                             </div>
                                         </div>
 
-                                        <legend>MSP Relay</legend>
-                                        <div class="form-group smaller">
+                                        <legend>MSRP Relay</legend>
+                                        <div class="form-group">
                                             <div class="col-lg-offset-3 col-lg-9">
                                                 <div class="checkbox">
                                                     <label>
@@ -188,7 +188,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-3 control-label">Voicemail URI</label>
+                                            <label for="inputAccount" class="col-lg-3 control-label">Relay</label>
                                             <div class="col-lg-3">
                                                 <input type="text" class="form-control" name="display_name">
                                             </div>
@@ -199,8 +199,8 @@
                                             <label for="inputAccount" class="col-lg-1 control-label">Transport</label>
                                             <div class="col-lg-2">
                                                 <select name="relay_transport">
-                                                    <option value="Optional">TLS</option>
-                                                    <option value="Disabled">TCP</option>
+                                                    <option value="TLS">TLS</option>
+                                                    <option value="TCP">TCP</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -251,8 +251,8 @@
                                             <label for="relay_transport_general" class="col-lg-3 control-label">MSRP Transport</label>
                                             <div class="col-lg-9">
                                                 <select name="relay_transport_general">
-                                                    <option value="Optional">TLS</option>
-                                                    <option value="Disabled">TCP</option>
+                                                    <option value="TLS">TLS</option>
+                                                    <option value="TCP">TCP</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -262,7 +262,7 @@
                                  <div class="tab-pane" id="account_advanced">
                                     <form class="form-horizontal" id="account_network_form" role="form">
 
-                                        <legend>Sip Settings</legend>
+                                        <legend>SIP Settings</legend>
                                         <div class="form-group">
                                             <label class="col-lg-3 control-label">Register Interval</label>
                                             <div class="col-lg-3">
@@ -310,6 +310,7 @@
                                             </div>
                                         </div>
 
+                                   <!--
                                         <legend>TLS Settings</legend>
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-3 control-label">Certificate file</label>
@@ -326,6 +327,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    -->
 
                                     </form>
                                 </div>
@@ -391,6 +393,7 @@
             <p class="muted credit">The OP^2 Project, courtesy of <a href="http://twitter.com/saghul">Saúl</a> and <a href="http://twitter.com/tijmenNL">Tijmen</a>.</p>
         </div>
     </div>
+
 
     <!-- JS and analytics only. -->
     <!-- Placed at the end of the document so the pages load faster -->

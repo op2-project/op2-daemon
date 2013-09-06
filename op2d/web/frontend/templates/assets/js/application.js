@@ -15,6 +15,10 @@ $.fn.serializeObject = function()
     return o;
 };
 
+String.prototype.capitalize = function(lower) {
+    return (lower ? this.toLowerCase() : this).replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+};
+
 function removeAccount() {
     console.log($('.selected').html());
     var account=$('.selected').html();
@@ -27,8 +31,7 @@ function removeAccount() {
                 success: function(){
                     $.fn.dialog2.helpers.alert("The account "+account+" has been removed", {});
                     getAccounts('account_list','account_info_form');
-                },
-
+                }
             });
         },
         decline: function() { alert("You said no? Right choice!"); }
@@ -44,11 +47,25 @@ function getAccounts(target_id,form) {
                 "<button id='add_account' data-toggle='modal' href='#myModal' class='btn btn-primary'><i class='icon-fixed-width icon-plus'></i></button>"+
                 "<button id='remove_account' class='btn btn-default btn-disabled' disabled><i class=' icon-fixed-width icon-minus'></i></button>"+
             "</div>"+
-        "</li>");
+        "</li>"
+    );
+
     $.getJSON('api/v1/accounts', function(data) {
         console.log(data);
         $.each(data.accounts, function(index,value) {
             $('#'+target_id).prepend("<li><a id=account_"+index+" href='#'>"+value.id+"</a></li>");
+
+            $.getJSON('api/v1/accounts/'+value.id+'/info', function(data1) {
+                if (data1.info.registration.state === 'succeeded') {
+                    $('#account_'+index).append("<i class='pull-right icon-circle text-success'></i>");
+                    console.log("ok");
+                    //state = "<span class=\"label label-success pull-right\">Registered</span>";
+                } else if (data1.info.registration.state === 'failed') {
+                    $('#account_'+index).append("<i class='pull-right icon-circle text-danger'></i>");
+                }
+                //console.log(data1);
+            });
+
             $('#account_'+index).click(function (){
                 $('.selected').removeClass("selected");
                 $('#remove_account').removeClass("btn-disabled").removeAttr("disabled");
@@ -65,7 +82,6 @@ function getAccounts(target_id,form) {
 
 
 function populateAccountForms(frm, account_id) {
-    // console.log("Trying to fill form"+ frm);
 
     // Show account tabs if account is not bonjour
 
@@ -79,37 +95,80 @@ function populateAccountForms(frm, account_id) {
         $('#account_network_tab').fadeOut();
     }
 
+    // Add focusout for password
+
+    $("#"+frm+" #inputPassword1").unbind('focusout');
+    $("#"+frm+" #inputPassword1").focusout(function (){
+        console.log("test"+JSON.stringify($(this).serializeObject()));
+        $.ajax({
+            type: "PUT",
+            url: "api/v1/accounts/"+account_id,
+            data: "{\"auth\":"+JSON.stringify($(this).serializeObject())+"}",
+            contentType: 'application/json',
+            success: function(){
+                console.log("Updated password");
+                getAccounts('account_list','account_info_form');
+                $("#"+frm+" #inputPassword1").val('');
+            },
+            error: function(){
+                console.log("Error updating password");
+                //return false;
+            }
+        });
+    });
+
+    // Get account properties
+
     $.getJSON('api/v1/accounts/'+account_id, function(data) {
         console.log(data);
 
         $("#account_media_form #audio_codecs").empty();
+
+        // Loop data
+
         $.each(data.account, function(key, value){
-            //console.log(key+": "+value);
+            console.log(key+": "+value);
 
             if( key === 'rtp') {
                 //console.log("In rtp"+value.audio_codec_list);
                 //console.log(value['audio_codec_list']);
 
                 if (value.audio_codec_list === null) {
-                   $.getJSON('api/v1/settings', function(data) {
+                    $.getJSON('api/v1/settings', function(data) {
                         $.each(data.rtp.audio_codec_list, function(key,value2) {
                             //console.log(key +" "+ value2);
                             $("#account_media_form #audio_codecs").append("<li><div class=\"checkbox smaller smaller-top\">"+
-                                        "<label>"+
-                                          "<input type=\"checkbox\" checked>"+ value2 +
-                                      "</label>"+
-                                  "</div></li>");
+                                "<label>"+
+                                "<input type=\"checkbox\" checked>"+ value2 +
+                                "</label>"+
+                                "</div></li>"
+                            );
                         });
-                   });
+                    });
                 }
-
             }
 
-            if( value === true) {
-                $("#"+frm+" input[name="+key+"]").val(value).prop('checked',true);
-            } else {
-                $("#"+frm+" input[name="+key+"]").val(value).prop('checked',false);
-            }
+            // if( value === true) {
+            //     $("#"+frm+" input[name="+key+"]").val(value).prop('checked',true);
+            // } else {
+
+            $("#"+frm+" input[name="+key+"]").val(value).prop('checked',value).unbind('focusout');
+            $("#"+frm+" input[name="+key+"]").val(value).prop('checked',value).focusout(function (){
+                console.log("test"+JSON.stringify($(this).serializeObject()));
+                $.ajax({
+                    type: "PUT",
+                    url: "api/v1/accounts/"+account_id,
+                    data: JSON.stringify($(this).serializeObject()),
+                    contentType: 'application/json',
+                    success: function(){
+                        console.log("updated");
+                    },
+                    error: function(){
+                        console.log("Error");
+                        //return false;
+                    }
+                });
+            });
         });
     });
 }
@@ -122,7 +181,7 @@ function populateSystemTab() {
         $.each(data.info, function(key,value2) {
             //console.log(key +" "+ value2);
             $('#system_info_list').append("<dt>"+
-                        key +
+                        key.replace("_"," ").capitalize() +
                         "</dt><dd>"+ value2 +
                       "</dd>");
         });
@@ -168,7 +227,7 @@ $(document).ready(function() {
             type: "POST",
             url: "api/v1/accounts",
             data: JSON.stringify($(this).serializeObject()),
-            contentType: 'application/json; charset=UTF-8',
+            contentType: 'application/json',
             success: function(){
                 $("#myModal").modal('hide');
                 getAccounts('account_list','account_info_form');
