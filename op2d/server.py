@@ -53,8 +53,6 @@ class OP2Daemon(object):
 
     def handle_notification(self, notification):
         handler = getattr(self, '_NH_%s' % notification.name, Null)
-        if not notification.name.startswith('SIPEngine'):
-            print notification
         handler(notification)
 
     def _NH_SIPApplicationDidStart(self, notification):
