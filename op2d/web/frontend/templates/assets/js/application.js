@@ -198,10 +198,15 @@ $(document).ready(function() {
         }
     });
 
+
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
         console.log(e.target); // activated tab
         if ( $(e.target).attr('href') == "#system_tab" ) {
             populateSystemTab();
+        } else if ( $(e.target).attr('href') == "#start_tab" ) {
+            console.log("start");
+            console.log($('.navbar-nav li'));
+            $('.navbar-nav li').removeClass('active');
         }
         //e.relatedTarget // previous tab
     });

@@ -43,10 +43,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">OP^2</a>
+                <a class="navbar-brand" href="#start_tab" data-toggle="tab">OP^2</a>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
-                        <li class='active'><a href="#account_tab" data-toggle="tab"><i class='icon-group'></i> Accounts</a></li>
+                        <li><a href="#account_tab" data-toggle="tab"><i class='icon-group'></i> Accounts</a></li>
                         <li><a href="#"><i class='icon-headphones'></i> Audio</a></li>
 <!--                         <li><a href="#"><i class='icon-keyboard'></i> Chat</a></li>
                         <li><a href="#"><i class='icon-upload-alt'></i> File Transfer</a></li> -->
@@ -68,7 +68,21 @@
         <!-- Begin page content -->
         <div class="container">
             <div class="tab-content">
-                <div id='account_tab' class="tab-pane active">
+                <div id='start_tab' class="tab-pane active fade in">
+                    <div class="page-header">
+                        <h1>OP^2</h1>
+                    </div>
+                    <div class='row'>
+                        <div class="col-md-9">
+                            <p>This is the webinterface of OP^2. This is a Rasberry Pi based SIP phone.</p>
+                            <p>With the interface you can setup or configure the accounts. You can also make calls</p>
+                        </div>
+                        <div class="col-md-3">
+                            <img src="assets/images/logo.png" class="img-thumbnail">
+                        </div>
+                    </div>
+                </div>
+                <div id='account_tab' class="tab-pane fade">
                     <div class="page-header">
                         <h1><i class='icon-group'></i> Accounts</h1>
                     </div>
