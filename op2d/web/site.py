@@ -1,7 +1,6 @@
 
 import os
 
-from autobahn.resource import WSGIRootResource
 from twisted.internet import reactor
 from twisted.python.threadpool import ThreadPool
 from twisted.web.server import Site
@@ -10,6 +9,7 @@ from twisted.web.wsgi import WSGIResource
 from werkzeug.wsgi import DispatcherMiddleware
 
 from op2d.web import api, frontend
+from op2d.web.utils import WSGIRootResource
 
 __all__ = ['get_site']
 
