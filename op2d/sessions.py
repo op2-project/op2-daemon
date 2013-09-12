@@ -25,6 +25,7 @@ __all__ = ['SessionManager']
 # - Add Ability to mute sessions
 # - Add ability to record sessions
 # - Separate statistics per stream type
+# - Need some sort of StreamHandler thing
 
 
 class IncomingProposalHandler(object):
