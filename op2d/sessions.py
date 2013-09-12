@@ -185,8 +185,10 @@ class SessionItem(object):
             self.audio_stream.device.output_muted = not value
         notification_center = NotificationCenter()
         if value:
+            self.unhold()
             notification_center.post_notification('SessionItemDidActivate', sender=self)
         else:
+            self.hold()
             notification_center.post_notification('SessionItemDidDeactivate', sender=self)
     active = property(_get_active, _set_active)
     del _get_active, _set_active
@@ -661,14 +663,6 @@ class SessionManager(object):
             self.update_ringtone()
 
     # SessionItem notifications
-
-    def _NH_SessionItemDidActivate(self, notification):
-        session = notification.sender
-        session.unhold()
-
-    def _NH_SessionItemDidDeactivate(self, notification):
-        session = notification.sender
-        session.hold()
 
     def _NH_SessionItemDidEnd(self, notification):
         session = notification.sender
