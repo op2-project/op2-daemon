@@ -131,6 +131,12 @@ function getAccounts(target_id,form) {
     });
 }
 
+function getSettings() {
+    $.getJSON('api/v1/settings', function(data) {
+        settings = data;
+        getAccounts('account_list','account_info_form');
+    });
+}
 
 function populateAccountForms(frm, account_id) {
 
