@@ -42,7 +42,7 @@ body {
 /* Not required for template or sticky footer method. */
 
 #wrap > .container {
-    padding: 60px 15px 0;
+    padding: 55px 15px 0;
     background-color: #ffffff;
 }
 .container .credit {
@@ -170,4 +170,13 @@ ol#audio_codecs li, ol#audio_codecs_general li {
     font-weight: bold;
 }
 
+.success {
+  border-color: #468847 !important;
+  color:#468847;
+}
+
+.error {
+  border-color: #b94a48 !important;
+  color: #b94a48;
+}
 
