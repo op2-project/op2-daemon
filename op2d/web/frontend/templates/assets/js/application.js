@@ -196,6 +196,8 @@ function populateSystemTab() {
 function populateAudioCodecs() {
     var global_list = $(settings.rtp.audio_codec_list).toArray();
 
+    $("#audio_codecs_general").empty();
+
     $.each(settings.rtp.audio_codec_order, function(key,value2) {
         var check="";
         if ( $.inArray(value2, global_list) != -1) {
