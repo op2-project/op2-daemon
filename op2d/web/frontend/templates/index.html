@@ -47,9 +47,11 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="#account_tab" data-toggle="tab"><i class='icon-group'></i> Accounts</a></li>
-                        <li><a href="#"><i class='icon-headphones'></i> Audio</a></li>
-<!--                         <li><a href="#"><i class='icon-keyboard'></i> Chat</a></li>
-                        <li><a href="#"><i class='icon-upload-alt'></i> File Transfer</a></li> -->
+                        <li><a href="#audio_tab" data-toggle="tab"><i class='icon-headphones'></i> Audio</a></li>
+<!--
+                        <li><a href="#"><i class='icon-keyboard'></i> Chat</a></li>
+                        <li><a href="#"><i class='icon-upload-alt'></i> File Transfer</a></li>
+-->
                         <li><a href="#system_tab" data-toggle="tab"><i class='icon-desktop'></i> System</a></li>
                     </ul>
                     <form class="navbar-form" role="call">
@@ -68,6 +70,7 @@
         <!-- Begin page content -->
         <div class="container">
             <div class="tab-content">
+
                 <div id='start_tab' class="tab-pane active fade in">
                     <div class="page-header">
                         <h1>OP^2</h1>
@@ -82,6 +85,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div id='account_tab' class="tab-pane fade">
                     <div class="page-header">
                         <h1><i class='icon-group'></i> Accounts</h1>
@@ -359,7 +363,64 @@
                     </div>
                 </div>
 
-                <div id='system_tab' class="tab-pane">
+                <div id='audio_tab' class="tab-pane fade">
+                    <div class="page-header">
+                        <h1><i class='icon-headphones'></i> Audio</h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <form class="form-horizontal" id="audio_devices_form" role="form">
+                                <legend>Audio Devices</legend>
+                                <div class="form-group">
+                                    <label for="input_device" class="col-lg-3 control-label">Input Device</label>
+                                    <div class="col-lg-9">
+                                        <select class='selectpicker' data-width="auto" name="input_device">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="output_device" class="col-lg-3 control-label">Output Device</label>
+                                    <div class="col-lg-9">
+                                        <select class='selectpicker' data-width="auto" name="output_device">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="alert_device" class="col-lg-3 control-label">Alert Device</label>
+                                    <div class="col-lg-9">
+                                        <select class='selectpicker' data-width="auto" name="alert_device">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="samplerate" class="col-lg-3 control-label">Sample Rate</label>
+                                    <div class="col-lg-9">
+                                        <select class='selectpicker' data-width="auto" name="samplerate">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-3 col-lg-9">
+                                        <div class="checkbox">
+                                            <label class='control-label'>
+                                                <input type="checkbox" name='echo'> Enable Echo Cancelling
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-5">
+                            <form class="form-horizontal" id="audio_codecs_form" role="form">
+                                <legend>Audio Codecs</legend>
+                                <ol class='nav' id='audio_codecs_general'></ol>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='system_tab' class="tab-pane fade">
                     <div class="page-header">
                         <h1><i class='icon-desktop'></i> System</h1>
                     </div>

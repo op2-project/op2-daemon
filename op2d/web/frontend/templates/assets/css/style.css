@@ -128,7 +128,7 @@ body.dragging, body.dragging * {
   z-index: 2000;
 }
 
-ol#audio_codecs {
+ol#audio_codecs, ol#audio_codecs_general{
     list-style-type: none;
     margin-left: 0;
     border-radius: 4px;
@@ -139,26 +139,26 @@ ol#audio_codecs {
     padding-bottom:4px;
     margin-bottom:4px;
 }
-ol#audio_codecs li.placeholder {
+ol#audio_codecs li.placeholder, ol#audio_codecs_general li.placeholder{
   position: relative;
   /** More li styles **/
 }
-ol#audio_codecs li.placeholder:before {
+ol#audio_codecs li.placeholder:before, ol#audio_codecs_general li.placeholder:before {
   position: absolute;
   /** Define arrowhead **/
 }
 
-ol#audio_codecs li:hover {
+ol#audio_codecs li:hover, ol#audio_codecs_general li:hover{
     background-color: #eeeeee;
 }
-ol#audio_codecs li {
+ol#audio_codecs li, ol#audio_codecs_general li {
     border-radius:4px;
     line-height:34px;
     font-size: 14px;
     height: 34px;
 }
 
-#audio_codecs input[type="checkbox"] {
+#audio_codecs input[type="checkbox"], #audio_codecs_general input[type="checkbox"] {
     margin-top:11px;
 }
 

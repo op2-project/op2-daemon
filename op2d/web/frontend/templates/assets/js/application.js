@@ -180,24 +180,102 @@ function populateSystemTab() {
         $('#system_info').append("<dl class='dl-horizontal' id='system_info_list'></dl>");
         $.each(data.info, function(key,value2) {
             //console.log(key +" "+ value2);
-            $('#system_info_list').append("<dt>"+
-                        key.replace("_"," ").capitalize() +
-                        "</dt><dd>"+ value2 +
-                      "</dd>");
+            $('#system_info_list').append(
+                "<dt>" +
+                key.replace("_"," ").capitalize() +
+                "</dt><dd>" + value2 +
+                "</dd>"
+            );
         });
-        //$('#system_info').append("</dl>");
+    });
+}
+
+function populateAudioCodecs() {
+    var global_list = $(settings.rtp.audio_codec_list).toArray();
+
+    $.each(settings.rtp.audio_codec_order, function(key,value2) {
+        var check="";
+        if ( $.inArray(value2, global_list) != -1) {
+            check="checked";
+        }
+        $("#audio_codecs_general").append("<li><div class=\"checkbox smaller smaller-top\">"+
+                "<label>"+
+                "<input name=\""+value2+"\" type=\"checkbox\"" + check +">"+ value2 +
+                "</label>"+
+                "</div></li>"
+        );
     });
 }
 
 $(document).ready(function() {
-    getAccounts('account_list','account_info_form');
-    var selectBox = $("select").selectBoxIt();
-     $("ol#audio_codecs").sortable({
+    getSettings();
+
+    $('select').selectpicker();
+
+    $("ol#audio_codecs").sortable({
         change: function( event, ui ) {
             $("#reset_audio_codecs").removeClass("btn-disabled").removeAttr("disabled");
+        },
+        stop: function( event, ui ) {
+            var that = this;
+            var enabled_list = [];
+            var order_list =[];
+            $("ol#audio_codecs li label input:checked").each(function(){
+                enabled_list.push($(this).attr('name'));
+            });
+            $("ol#audio_codecs li label input").each(function(){
+                order_list.push($(this).attr('name'));
+            });
+            console.log(JSON.stringify(enabled_list));
+            var account = $('.selected').clone();
+            account.find("i").remove();
+            account = account.html();
+            console.log("{\"rtp\":{\"audio_codec_list\": "+ JSON.stringify(enabled_list) + "}}");
+            $.ajax({
+                type: "PUT",
+                url: "api/v1/accounts/"+account,
+                data: "{\"rtp\":{\"audio_codec_list\": "+ JSON.stringify(enabled_list) + "}}",
+                contentType: 'application/json',
+                success: function(){
+                    console.log($(that).addClass('success'));
+                    // console.log($(this).closest('.form-group'));
+                    // $(that).closest('.form-group').addClass("has-success");
+                    // console.log("Updated " + key);
+                    timeout = setTimeout(function() {
+                        console.log('Timeout'+$(that));
+                        $(that).removeClass('success');
+                    },2500);
+                },
+                error: function(){
+                    // $(that).closest('.form-group').addClass("has-error");
+                    console.log("Error");
+                    $(that).addClass('error');
+                    //return false;
+               }
+            });
+            $.ajax({
+                type: "PUT",
+                url: "api/v1/accounts/"+account,
+                data: "{\"rtp\":{\"audio_codec_order\": "+ JSON.stringify(order_list) + "}}",
+                contentType: 'application/json',
+                success: function(){
+                    // console.log($(this).closest('.form-group'));
+                    // $(that).closest('.form-group').addClass("has-success");
+                    // console.log("Updated " + key);
+                },
+                error: function(){
+                    // $(that).closest('.form-group').addClass("has-error");
+                    console.log("Error");
+                    $(that).addClass('error');
+                    //return false;
+               }
+            });
+
         }
     });
 
+
+    $("ol#audio_codecs_general").sortable();
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
         console.log(e.target); // activated tab
@@ -207,6 +285,8 @@ $(document).ready(function() {
             console.log("start");
             console.log($('.navbar-nav li'));
             $('.navbar-nav li').removeClass('active');
+        } else if ( $(e.target).attr('href') == "#audio_tab" ) {
+            populateAudioCodecs();
         }
         //e.relatedTarget // previous tab
     });
