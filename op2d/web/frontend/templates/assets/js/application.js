@@ -92,6 +92,7 @@ function populateAccountForms(frm, account_id) {
         $('#account_server_tab').show();
         $('#account_network_tab').show();
     } else {
+        $('#account_info_tab a').tab('show');
         $('#account_advanced_tab').fadeOut();
         $('#account_server_tab').fadeOut();
         $('#account_network_tab').fadeOut();
