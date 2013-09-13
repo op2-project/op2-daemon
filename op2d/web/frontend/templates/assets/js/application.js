@@ -85,7 +85,7 @@ function removeAccount() {
                 }
             });
         },
-        decline: function() { alert("You said no? Right choice!"); }
+        decline: function() {}
     });
 
     event.preventDefault();
