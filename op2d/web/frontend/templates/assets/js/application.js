@@ -214,6 +214,26 @@ $(document).ready(function() {
 
     $('select').selectpicker();
 
+    $('#reregister').click(function(event){
+        var account = $('.selected').clone();
+        account.find("i").remove();
+        account = account.html();
+        event.preventDefault();
+        var that = this ;
+        $(that).button('loading').addClass('btn-info');
+        $.ajax({
+            type: "GET",
+            url: "api/v1/accounts/"+account+"/reregister",
+            success: function(){
+                getAccounts('account_list','account_info_form', 0);
+                timeout = setTimeout(function() {
+                    $(that).button('reset').removeClass('btn-info');
+                },500);
+
+            }
+        });
+    });
+
     $("ol#audio_codecs").sortable({
         change: function( event, ui ) {
             $("#reset_audio_codecs").removeClass("btn-disabled").removeAttr("disabled");
