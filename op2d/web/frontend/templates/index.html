@@ -21,7 +21,7 @@
 
     <link rel="stylesheet" href="assets/css/jquery.dialog2.css">
 
-    <link rel="stylesheet" href="assets/css/jquery.selectBoxIt.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-select.css">
     <!-- Favicons -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="./assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="./assets/ico/apple-touch-icon-114-precomposed.png">
@@ -31,6 +31,7 @@
 
     <!-- Place anything custom after this. -->
 </head>
+
 <body>
     <!-- Wrap all page content here -->
     <div id="wrap">
@@ -155,10 +156,10 @@
                                         <div class="form-group">
                                             <label for="" class="col-lg-2 control-label">SRTP Encryption</label>
                                             <div class="col-lg-10">
-                                                <select name="sRTP">
-                                                    <option value="Optional">Optional</option>
-                                                    <option value="Disabled">Disabled</option>
-                                                    <option value="Mandatory">Mandatory</option>
+                                                <select id='test' class='selectpicker' data-width="auto" name="srtp_encryption">
+                                                    <option value="optional">Optional</option>
+                                                    <option value="disabled">Disabled</option>
+                                                    <option value="mandatory">Mandatory</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -190,7 +191,7 @@
 
                                             <label for="relay_transport" class="col-lg-1 control-label">Transport</label>
                                             <div class="col-lg-2">
-                                                <select name="relay_transport">
+                                                <select class='selectpicker' data-width="auto" name="proxy_transport">
                                                     <option value="UDP">UDP</option>
                                                     <option value="TCP">TCP</option>
                                                     <option value="TLS">TLS</option>
@@ -225,7 +226,7 @@
                                             </div>
                                             <label for="inputAccount" class="col-lg-1 control-label">Transport</label>
                                             <div class="col-lg-2">
-                                                <select name="relay_transport">
+                                                <select class='selectpicker' data-width="auto" name="relay_transport">
                                                     <option value="TLS">TLS</option>
                                                     <option value="TCP">TCP</option>
                                                 </select>
@@ -277,7 +278,7 @@
                                         <div class="form-group">
                                             <label for="relay_transport_general" class="col-lg-3 control-label">MSRP Transport</label>
                                             <div class="col-lg-9">
-                                                <select name="relay_transport_general">
+                                                <select class='selectpicker' data-width="auto" name="relay_transport_general">
                                                     <option value="TLS">TLS</option>
                                                     <option value="TCP">TCP</option>
                                                 </select>
@@ -484,12 +485,19 @@
     <script src="/assets/js/jquery-2.0.3.min.js"></script>
     <script src="/assets/js/jquery-migrate-1.2.1.js"></script>
     <script src="/assets/js/jquery-ui-1.8.23.custom.min.js"></script>
+
     <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/jquery.selectBoxIt.min.js"></script>
+    <script src="/assets/js/bootstrap-select.min.js"></script>
+
+    <script src="/assets/js/jquery.validate.min.js"></script>
+    <script src="/assets/js/additional-methods.min.js"></script>
+
     <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
     <script type="text/javascript" src="/assets/js/jquery.form.min.js"></script>
+
     <script type="text/javascript" src="/assets/js/jquery.dialog2.js"></script>
     <script type="text/javascript" src="/assets/js/jquery.dialog2.helpers.js"></script>
+
     <script src="/assets/js/application.js"></script>
 </body>
 </html>
