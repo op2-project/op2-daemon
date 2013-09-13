@@ -20,8 +20,10 @@ String.prototype.capitalize = function(lower) {
 };
 
 function removeAccount() {
-    console.log($('.selected').html());
-    var account=$('.selected').html();
+    var account = $('.selected').clone();
+    account.find("i").remove();
+    account = account.html();
+
     $.fn.dialog2.helpers.confirm("Are you sure to remove account:<br/><p class='text-center text-danger'><strong>" + account + '</strong></p>', {
         confirm: function() {
             $.ajax({
