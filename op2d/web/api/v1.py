@@ -46,6 +46,7 @@ def handle_accounts():
         for account in accounts:
             state = get_state(account)
             state['id'] = account.id
+            state['auth']['password'] = '****'
             accs.append(state)
         return json.jsonify({'accounts': accs})
     elif request.method == 'POST':
@@ -67,7 +68,9 @@ def handle_accounts():
             return json.jsonify({'msg': str(e)}), 400
         account.enabled = True
         account.save()
-        return json.jsonify(get_state(account)), 201
+        state = get_state(account)
+        state['auth']['password'] = '****'
+        return json.jsonify({'account': state}), 201
 
 
 @app.route('/accounts/<sip:account_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -79,7 +82,9 @@ def handle_account(account_id):
 
     if request.method == 'GET':
         # Retrieve account
-        return json.jsonify({'account': get_state(account)})
+        state = get_state(account)
+        state['auth']['password'] = '****'
+        return json.jsonify({'account': state})
     elif request.method == 'PUT':
         # Update existing account
         state = request.get_json(silent=True)
@@ -91,7 +96,9 @@ def handle_account(account_id):
         except ValueError, e:
             return json.jsonify({'msg': str(e)}), 400
         account.save()
-        return json.jsonify({'account': get_state(account)})
+        state = get_state(account)
+        state['auth']['password'] = '****'
+        return json.jsonify({'account': state})
     elif request.method == 'DELETE':
         try:
             account.delete()
