@@ -19,7 +19,7 @@ class EchoCancellerSettingsExtension(EchoCancellerSettings):
 
 class AudioSettingsExtension(AudioSettings):
     recordings_directory = Setting(type=ApplicationDataPath, default=ApplicationDataPath('recordings'))
-    sample_rate = Setting(type=SampleRate, default=32000)
+    sample_rate = Setting(type=SampleRate, default=16000)
     echo_canceller = EchoCancellerSettingsExtension
 
 
