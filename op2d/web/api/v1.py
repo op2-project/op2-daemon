@@ -29,6 +29,11 @@ class SipUriConverter(BaseConverter):
 app.url_map.converters['sip'] = SipUriConverter
 
 
+@app.errorhandler(404)
+def not_found(error):
+    return json.jsonify({'msg': 'resource not found'}), 404
+
+
 @app.route('/')
 def index():
     message = 'OP2d version %s APIv1' % op2d.__version__
