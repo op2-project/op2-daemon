@@ -3,7 +3,7 @@ import platform
 import sys
 
 from sipsimple.configuration import Setting, SettingsGroup, SettingsObjectExtension
-from sipsimple.configuration.datatypes import AudioCodecList, NonNegativeInteger, PositiveInteger, Path, SampleRate
+from sipsimple.configuration.datatypes import AudioCodecList, Path, SampleRate
 from sipsimple.configuration.settings import AudioSettings, ChatSettings, EchoCancellerSettings, FileTransferSettings, LogsSettings, RTPSettings, TLSSettings
 
 from op2d import __version__
@@ -11,13 +11,6 @@ from op2d.configuration.datatypes import ApplicationDataPath, SoundFile
 from op2d.resources import Resources
 
 __all__ = ['SIPSimpleSettingsExtension']
-
-
-class AnsweringMachineSettings(SettingsGroup):
-    enabled = Setting(type=bool, default=False)
-    answer_delay = Setting(type=NonNegativeInteger, default=10)
-    max_recording = Setting(type=PositiveInteger, default=3)
-    unavailable_message = Setting(type=SoundFile, default=SoundFile(Resources.get('sounds/unavailable_message.wav')), nillable=True)
 
 
 class EchoCancellerSettingsExtension(EchoCancellerSettings):
@@ -69,7 +62,6 @@ class TLSSettingsExtension(TLSSettings):
 
 
 class SIPSimpleSettingsExtension(SettingsObjectExtension):
-    answering_machine = AnsweringMachineSettings
     audio = AudioSettingsExtension
     chat = ChatSettingsExtension
     file_transfer = FileTransferSettingsExtension
