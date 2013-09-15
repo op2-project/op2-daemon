@@ -5,15 +5,17 @@ import traceback
 from application import log
 from flask import Flask, abort, json, request
 from sipsimple.account import Account, BonjourAccount, AccountManager
-from sipsimple.configuration import DefaultValue, DuplicateIDError
+from sipsimple.configuration import DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
 from sipsimple.core import Engine
 from sipsimple.streams import AudioStream
 from werkzeug.routing import BaseConverter
 
 import op2d
+
 from op2d.accounts import AccountModel
 from op2d.sessions import SessionManager
+from op2d.web.api.utils import get_state, set_state
 
 __all__ = ['app']
 
@@ -26,35 +28,6 @@ class SipUriConverter(BaseConverter):
     weight = 300
 
 app.url_map.converters['sip'] = SipUriConverter
-
-
-def get_state(obj):
-    def cleanup_state(o, old_state):
-        state = {}
-        for k, v in old_state.iteritems():
-            if v is DefaultValue:
-                v = getattr(o, k)
-            elif isinstance(v, dict):
-                v = cleanup_state(getattr(o, k), v)
-            if hasattr(v, '__getstate__'):
-                v = v.__getstate__()
-            if v in ('true', 'false'):
-                # fix booleans to be real booleans and not strings
-                v = True if v=='true' else False
-            state[k] = v
-        return state
-    return cleanup_state(obj, obj.__getstate__())
-
-
-def set_state(obj, state):
-    valid_keys = dir(obj.__class__)
-    for k, v in ((k, v) for k, v in state.iteritems() if k in valid_keys):
-        if isinstance(v, dict):
-            o = getattr(obj, k, None)
-            if o is not None:
-                set_state(o, v)
-        else:
-            setattr(obj, k, v)
 
 
 @app.route('/')
