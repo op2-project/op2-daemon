@@ -1,9 +1,10 @@
 
 import re
 
+from flask import json
 from sipsimple.configuration import DefaultValue
 
-__all__ = ['get_state', 'set_state']
+__all__ = ['error_response', 'get_state', 'set_state']
 
 
 class SettingsParser(object):
@@ -77,4 +78,8 @@ def set_state(obj, state):
                 raise ValueError('Unknown setting: %s' % name)
             except ValueError, e:
                 raise ValueError('%s: %s' % (name, str(e)))
+
+
+def error_response(code, reason='unkwnown'):
+    return json.jsonify({'msg': reason}), code
 

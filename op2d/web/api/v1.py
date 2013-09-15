@@ -2,7 +2,7 @@
 import platform
 
 from application import log
-from flask import Flask, abort, json, request
+from flask import Flask, json, request
 from sipsimple.account import Account, BonjourAccount, AccountManager
 from sipsimple.configuration import DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
@@ -14,7 +14,7 @@ import op2d
 
 from op2d.accounts import AccountModel
 from op2d.sessions import SessionManager
-from op2d.web.api.utils import get_state, set_state
+from op2d.web.api.utils import error_response, get_state, set_state
 
 __all__ = ['app']
 
@@ -53,19 +53,19 @@ def handle_accounts():
         # Create account
         state = request.get_json(silent=True)
         if not state:
-            abort(400)
+            return error_response(400, 'error processing POST body')
         account_id = state.pop('id', None)
         if not account_id:
-            abort(400)
+            return error_response(400, 'account ID was not specified')
         try:
             account = Account(account_id)
         except DuplicateIDError:
-            abort(409)
+            return error_response(409, 'duplicated account ID')
         try:
             set_state(account, state)
         except ValueError, e:
             account.delete()
-            return json.jsonify({'msg': str(e)}), 400
+            return error_response(400, str(e))
         account.enabled = True
         account.save()
         state = get_state(account)
@@ -78,7 +78,7 @@ def handle_account(account_id):
     try:
         account = AccountManager().get_account(account_id)
     except KeyError:
-        abort(404)
+        return error_response(404, 'account not found')
 
     if request.method == 'GET':
         # Retrieve account
@@ -89,12 +89,13 @@ def handle_account(account_id):
         # Update existing account
         state = request.get_json(silent=True)
         if not state:
-            abort(400)
+            return error_response(400, 'error processing PUT body')
         state.pop('id', None)
         try:
             set_state(account, state)
         except ValueError, e:
-            return json.jsonify({'msg': str(e)}), 400
+            # TODO: some settings may have been applied, what do we do?
+            return error_response(400, str(e))
         account.save()
         state = get_state(account)
         state['auth']['password'] = '****'
@@ -102,8 +103,8 @@ def handle_account(account_id):
     elif request.method == 'DELETE':
         try:
             account.delete()
-        except Exception:
-            abort(400)
+        except Exception, e:
+            return error_response(400, str(e))
         return ''
 
 
@@ -112,9 +113,9 @@ def reregister_account(account_id):
     try:
         account = AccountManager().get_account(account_id)
     except KeyError:
-        abort(404)
+        return error_response(404, 'account not found')
     if account is BonjourAccount():
-        abort(403)
+        return error_response(403, 'bonjour account does not register')
     account.reregister()
     return ''
 
@@ -124,7 +125,7 @@ def account_info(account_id):
     try:
         account = AccountManager().get_account(account_id)
     except KeyError:
-        abort(404)
+        return error_response(404, 'account not found')
     model = AccountModel()
     registration = {}
     info = model.get_account(account.id)
@@ -149,11 +150,12 @@ def handle_settings():
         # Update settings
         state = request.get_json(silent=True)
         if not state:
-            abort(400)
+            return error_response(400, 'error processing PUT body')
         try:
             set_state(settings, state)
         except ValueError, e:
-            return json.jsonify({'msg': str(e)}), 400
+            # TODO: some settings may have been applied, what do we do?
+            return error_response(400, str(e))
         settings.save()
         return json.jsonify(get_state(settings))
 
@@ -191,19 +193,19 @@ def audio_devices():
 def dial():
     to = request.args.get('to', None)
     if to is None:
-        abort(400)
+        return error_response(400, 'destionation not specified')
     account_id = request.args.get('from', None)
     account = None
     if account_id is not None:
         try:
             account = AccountManager().get_account(account_id)
         except KeyError:
-            pass
+            return error_response(400, 'invalid account specified')
     try:
         SessionManager().start_call(None, to, [AudioStream()], account=account)
-    except Exception:
-        log.error('Starting call to %s' % to)
+    except Exception, e:
+        log.error('Starting call to %s: %s' % (to, e))
         log.err()
-        abort(400)
+        return error_response(400, str(e))
     return ''
 
