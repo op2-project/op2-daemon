@@ -3,7 +3,7 @@ import platform
 import sys
 
 from sipsimple.configuration import Setting, SettingsGroup, SettingsObjectExtension
-from sipsimple.configuration.datatypes import AudioCodecList, Path, PJSIPLogLevel, SampleRate
+from sipsimple.configuration.datatypes import AudioCodecList, NonNegativeInteger, Path, PJSIPLogLevel, SampleRate
 from sipsimple.configuration.settings import AudioSettings, ChatSettings, EchoCancellerSettings, FileTransferSettings, LogsSettings, RTPSettings, TLSSettings
 
 from op2d import __version__
@@ -46,6 +46,7 @@ class LogsSettingsExtension(LogsSettings):
 
 class RTPSettingsExtension(RTPSettings):
     audio_codec_list = Setting(type=AudioCodecList, default=AudioCodecList(('speex', 'G722', 'PCMU', 'PCMA')))
+    timeout = Setting(type=NonNegativeInteger, default=0)
 
 
 class SoundSettings(SettingsGroup):
