@@ -44,7 +44,7 @@ class LogsSettingsExtension(LogsSettings):
 
 
 class RTPSettingsExtension(RTPSettings):
-    audio_codec_order = Setting(type=AudioCodecList, default=AudioCodecList(('opus', 'speex', 'G722', 'GSM', 'iLBC', 'PCMU', 'PCMA')))
+    audio_codec_list = Setting(type=AudioCodecList, default=AudioCodecList(('speex', 'G722', 'PCMU', 'PCMA')))
 
 
 class SoundSettings(SettingsGroup):
