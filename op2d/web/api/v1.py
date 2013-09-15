@@ -1,6 +1,5 @@
 
 import platform
-import traceback
 
 from application import log
 from flask import Flask, abort, json, request
@@ -63,8 +62,9 @@ def handle_accounts():
             abort(409)
         try:
             set_state(account, state)
-        except Exception:
-            traceback.print_exc()
+        except ValueError, e:
+            account.delete()
+            return json.jsonify({'msg': str(e)}), 400
         account.enabled = True
         account.save()
         return json.jsonify(get_state(account)), 201
@@ -88,9 +88,8 @@ def handle_account(account_id):
         state.pop('id', None)
         try:
             set_state(account, state)
-        except Exception:
-            traceback.print_exc()
-            abort(400)
+        except ValueError, e:
+            return json.jsonify({'msg': str(e)}), 400
         account.save()
         return json.jsonify({'account': get_state(account)})
     elif request.method == 'DELETE':
@@ -146,9 +145,8 @@ def handle_settings():
             abort(400)
         try:
             set_state(settings, state)
-        except Exception:
-            traceback.print_exc()
-            abort(400)
+        except ValueError, e:
+            return json.jsonify({'msg': str(e)}), 400
         settings.save()
         return json.jsonify(get_state(settings))
 

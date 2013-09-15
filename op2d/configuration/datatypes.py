@@ -94,5 +94,3 @@ class CustomSoundFile(object):
     path = property(_get_path, _set_path)
     del _get_path, _set_path
 
-
-

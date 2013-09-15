@@ -1,7 +1,46 @@
 
+import re
+
 from sipsimple.configuration import DefaultValue
 
 __all__ = ['get_state', 'set_state']
+
+
+class SettingsParser(object):
+
+    @classmethod
+    def parse_default(cls, type, value):
+        return value
+
+    @classmethod
+    def parse_MSRPRelayAddress(cls, type, value):
+        return type.from_description(value)
+
+    @classmethod
+    def parse_SIPProxyAddress(cls, type, value):
+        return type.from_description(value)
+
+    @classmethod
+    def parse_STUNServerAddress(cls, type, value):
+        return type.from_description(value)
+
+    @classmethod
+    def parse_STUNServerAddressList(cls, type, value):
+        values = re.split(r'\s*,\s*', value)
+        return [type.type.from_description(v) for v in values]
+
+    @classmethod
+    def parse_PortRange(cls, type, value):
+        return type(*value.split(':', 1))
+
+    @classmethod
+    def parse(cls, type, value):
+        if value == 'None':
+            return None
+        if value == 'DEFAULT':
+            return DefaultValue
+        parser = getattr(cls, 'parse_%s' % type.__name__, cls.parse_default)
+        return parser(type, value)
 
 
 def get_state(obj):
@@ -23,12 +62,19 @@ def get_state(obj):
 
 
 def set_state(obj, state):
-    valid_keys = dir(obj.__class__)
-    for k, v in ((k, v) for k, v in state.iteritems() if k in valid_keys):
+    for k, v in state.iteritems():
         if isinstance(v, dict):
             o = getattr(obj, k, None)
-            if o is not None:
-                set_state(o, v)
-        else:
-            setattr(obj, k, v)
+            set_state(o, v)
+        elif obj is not None:
+            name = k
+            value = v
+            try:
+                attribute = getattr(type(obj), name)
+                value = SettingsParser.parse(attribute.type, value)
+                setattr(obj, name, value)
+            except AttributeError:
+                raise ValueError('Unknown setting: %s' % name)
+            except ValueError, e:
+                raise ValueError('%s: %s' % (name, str(e)))
 
