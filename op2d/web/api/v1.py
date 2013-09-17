@@ -51,7 +51,8 @@ def handle_accounts():
         for account in accounts:
             state = get_state(account)
             state['id'] = account.id
-            state['auth']['password'] = '****'
+            if 'auth' in state:
+                state['auth']['password'] = '****'
             accs.append(state)
         return json.jsonify({'accounts': accs})
     elif request.method == 'POST':
@@ -74,7 +75,8 @@ def handle_accounts():
         account.enabled = True
         account.save()
         state = get_state(account)
-        state['auth']['password'] = '****'
+        if 'auth' in state:
+            state['auth']['password'] = '****'
         return json.jsonify({'account': state}), 201
 
 
@@ -88,7 +90,8 @@ def handle_account(account_id):
     if request.method == 'GET':
         # Retrieve account
         state = get_state(account)
-        state['auth']['password'] = '****'
+        if 'auth' in state:
+            state['auth']['password'] = '****'
         return json.jsonify({'account': state})
     elif request.method == 'PUT':
         # Update existing account
@@ -103,7 +106,8 @@ def handle_account(account_id):
             return error_response(400, str(e))
         account.save()
         state = get_state(account)
-        state['auth']['password'] = '****'
+        if 'auth' in state:
+            state['auth']['password'] = '****'
         return json.jsonify({'account': state})
     elif request.method == 'DELETE':
         try:
