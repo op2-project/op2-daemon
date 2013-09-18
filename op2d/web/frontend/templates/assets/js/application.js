@@ -371,27 +371,18 @@ $(document).ready(function() {
         //e.relatedTarget // previous tab
     });
 
-        // $("#remove_account_dialog").dialog2({
-        //     showCloseHandle: false,
-        //     removeOnClose: false,
-        //     autoOpen: false,
-        //     closeOnEscape: false,
-        //     closeOnOverlayClick: false
-        // });
-
-        // $('#remove_account').click(function(event) {
-        //     event.preventDefault();
-        //     $("#sample1-dialog").dialog2("open");
-        // });
-
-     $('#account_add_form').on('submit', function(){
-
-        //console.log(JSON.stringify($(this).serializeObject()));
-
+     $('#account_add_form').on('submit', function(event){
+        event.preventDefault();
+        var display_name = $(this).find("input[name='display_name1']").val();
+        var pass = $(this).find("input[name='password1']").val();
+        var id = $(this).find("input[name='id']").val();
+        //console.log($(this).find("input[name='id']").val());
+        var data = '{"id":"'+ id + '","display_name":"' + display_name + '", "auth":{"password":"'+ pass +'"}}';
+        console.log(data);
         $.ajax({
             type: "POST",
             url: "api/v1/accounts",
-            data: JSON.stringify($(this).serializeObject()),
+            data: data ,
             contentType: 'application/json',
             success: function(){
                 $("#myModal").modal('hide');
