@@ -101,7 +101,20 @@ function removeAccount() {
 
     event.preventDefault();
 }
+function populateRegistration(index, value) {
+    var el = $('#account_'+index).find("i");
+    el.remove();
 
+    $.getJSON('api/v1/accounts/'+value.id+'/info', function(data1) {
+        if (data1.info.registration.state === 'succeeded') {
+            $('#account_'+index).append("<i class='pull-right icon-circle text-success'></i>");
+        } else if (data1.info.registration.state === 'failed') {
+            $('#account_'+index).append("<i class='pull-right icon-circle text-danger'></i>");
+        } else if ( data1.info.registration.state === "ended" && value.enabled === true) {
+            $('#account_'+index).append("<i class='pull-right icon-circle'></i>");
+        }
+    });
+}
 function getAccounts(target_id,form, change, rdata) {
     console.log("Get accounts");
 
@@ -128,20 +141,13 @@ function getAccounts(target_id,form, change, rdata) {
             $('#'+target_id).prepend("<li><a id=account_"+index+" href='#'>"+value.id+"</a></li>");
 
             // Get registration state
-            $.getJSON('api/v1/accounts/'+value.id+'/info', function(data1) {
-                if (data1.info.registration.state === 'succeeded') {
-                    $('#account_'+index).append("<i class='pull-right icon-circle text-success'></i>");
-                } else if (data1.info.registration.state === 'failed') {
-                    $('#account_'+index).append("<i class='pull-right icon-circle text-danger'></i>");
-                } else if ( data1.info.registration.state === "ended" && value.enabled === true) {
-                    $('#account_'+index).append("<i class='pull-right icon-circle'></i>");
-                }
-            });
+            populateRegistration(index, value);
 
             // Add click handler
             $('#account_'+index).click(function (){
                 $('.selected').removeClass("selected");
                 $('#remove_account').removeClass("btn-disabled").removeAttr("disabled");
+                populateRegistration(index, value);
                 populateAccountForms(form,value.id, value);
                 $(this).addClass("selected");
             });
