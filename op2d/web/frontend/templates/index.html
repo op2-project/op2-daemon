@@ -62,14 +62,16 @@
                                 <button class="btn btn-primary" type="button">Call</button>
                             </span>
                         </div>
+                        <select class='selectpicker pull-right' name="nav_account_list">
+                        </select>
                     </form>
-
                 </div><!--/.nav-collapse -->
             </div>
         </div>
 
         <!-- Begin page content -->
         <div class="container">
+
             <div class="tab-content">
 
                 <div id='start_tab' class="tab-pane active fade in">
@@ -112,9 +114,9 @@
                                         <div class="form-group smaller">
                                             <div class="col-lg-offset-2 col-lg-10">
                                                 <div class="checkbox smaller">
-                                                    <label>
-                                                      <input type="checkbox" name='enabled'> Use Account
-                                                  </label>
+                                                    <label class='control-label'>
+                                                        <input type="checkbox" name='enabled'> Use Account
+                                                    </label>
                                               </div>
                                             </div>
                                         </div>
@@ -128,7 +130,7 @@
                                         <div class="form-group">
                                             <label for="inputPassword1" class="col-lg-2 control-label">Password</label>
                                             <div class="col-lg-10">
-                                                <input type="password" class="form-control" id="inputPassword1" name="password" placeholder="Password" autocomplete="off">
+                                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" autocomplete="off">
                                             </div>
                                         </div>
                                     </form>
@@ -146,8 +148,8 @@
                                         <div class="form-group smaller">
                                             <div class="col-lg-offset-2 col-lg-10">
                                                 <div class="checkbox smaller">
-                                                    <label>
-                                                      <input type="checkbox" name='enabled'> Send inband DTMF
+                                                    <label class='control-label'>
+                                                      <input type="checkbox" name='rtp_inband_dtmf'> Send inband DTMF
                                                   </label>
                                               </div>
                                             </div>
@@ -173,8 +175,8 @@
                                         <div class="form-group">
                                             <div class="col-lg-offset-3 col-lg-9">
                                                 <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name='enabled'> Always use my proxy for outgoing sessions
+                                                    <label class='control-label'>
+                                                        <input type="checkbox" name='always_use_my_proxy'> Always use my proxy for outgoing sessions
                                                     </label>
                                                 </div>
                                             </div>
@@ -182,26 +184,26 @@
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-3 control-label">Outbound Proxy</label>
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control" name="display_name">
+                                                <input type="text" class="form-control" name="outbound_proxy">
                                             </div>
-                                            <label for="inputAccount" class="col-lg-1 control-label">Port</label>
+                                            <label for="sip_port" class="col-lg-1 control-label">Port</label>
                                             <div class="col-lg-2">
-                                                <input type="text" class="form-control" name="display_name">
+                                                <input type="text" class="form-control" name="sip_port" value='5060'>
                                             </div>
 
-                                            <label for="relay_transport" class="col-lg-1 control-label">Transport</label>
+                                            <label for="proxy_transport" class="col-lg-1 control-label">Transport</label>
                                             <div class="col-lg-2">
                                                 <select class='selectpicker' data-width="auto" name="proxy_transport">
-                                                    <option value="UDP">UDP</option>
-                                                    <option value="TCP">TCP</option>
-                                                    <option value="TLS">TLS</option>
+                                                    <option value="udp">UDP</option>
+                                                    <option value="tcp">TCP</option>
+                                                    <option value="tls">TLS</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-3 control-label">Auth Username</label>
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control" name="display_name">
+                                                <input type="text" class="form-control" name="username">
                                             </div>
                                         </div>
 
@@ -209,26 +211,26 @@
                                         <div class="form-group">
                                             <div class="col-lg-offset-3 col-lg-9">
                                                 <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name='enabled'> Always use my relay for outgoing sessions
+                                                    <label class='control-label'>
+                                                        <input type="checkbox" name='use_msrp_relay_for_outbound'> Always use my relay for outgoing sessions
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-3 control-label">Relay</label>
+                                            <label for="msrp_relay" class="col-lg-3 control-label">Relay</label>
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control" name="display_name">
+                                                <input type="text" class="form-control" placeholder='Relay address taken from DNS' name="msrp_relay">
                                             </div>
                                             <label for="inputAccount" class="col-lg-1 control-label">Port</label>
                                             <div class="col-lg-2">
-                                                <input type="text" class="form-control" name="display_name">
+                                                <input type="text" class="form-control" name="msrp_port" value='2855'>
                                             </div>
                                             <label for="inputAccount" class="col-lg-1 control-label">Transport</label>
                                             <div class="col-lg-2">
-                                                <select class='selectpicker' data-width="auto" name="relay_transport">
-                                                    <option value="TLS">TLS</option>
-                                                    <option value="TCP">TCP</option>
+                                                <select class='selectpicker' data-width="auto" name="msrp_general_transport">
+                                                    <option value="tls">TLS</option>
+                                                    <option value="tcp">TCP</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -237,27 +239,30 @@
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-3 control-label">Voicemail URI</label>
                                             <div class="col-lg-9">
-                                                <input type="text" class="form-control" name="display_name">
+                                                <input type="text" class="form-control" placeholder='Discovered by subscribing to the account' name="voicemail_uri">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-3 control-label">XCAP Root URL</label>
                                             <div class="col-lg-9">
-                                                <input type="text" class="form-control" name="display_name">
+                                                <input type="text" class="form-control" placeholder='Taken from the DNS TXT record' name="xcap_root">
                                             </div>
                                         </div>
+<!--
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-3 control-label">Server Tools URL</label>
                                             <div class="col-lg-9">
                                                 <input type="text" class="form-control" name="display_name">
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-3 control-label">Conference Server</label>
                                             <div class="col-lg-9">
                                                 <input type="text" class="form-control" name="display_name">
                                             </div>
                                         </div>
+-->
                                     </form>
                                 </div>
 
@@ -268,8 +273,8 @@
                                         <div class="form-group">
                                             <div class="col-lg-offset-3 col-lg-10">
                                                 <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name='enabled'> Use ICE
+                                                    <label class='control-label'>
+                                                        <input type="checkbox" name='use_ice'> Use ICE
                                                     </label>
                                                 </div>
                                             </div>
@@ -278,9 +283,9 @@
                                         <div class="form-group">
                                             <label for="relay_transport_general" class="col-lg-3 control-label">MSRP Transport</label>
                                             <div class="col-lg-9">
-                                                <select class='selectpicker' data-width="auto" name="relay_transport_general">
-                                                    <option value="TLS">TLS</option>
-                                                    <option value="TCP">TCP</option>
+                                                <select class='selectpicker' data-width="auto" name="transport">
+                                                    <option value="tls">TLS</option>
+                                                    <option value="tcp">TCP</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -288,14 +293,23 @@
                                 </div>
 
                                  <div class="tab-pane" id="account_advanced">
-                                    <form class="form-horizontal" id="account_network_form" role="form">
+                                    <form class="form-horizontal" id="account_advanced_form" role="form">
 
                                         <legend>SIP Settings</legend>
+                                        <div class="form-group">
+                                            <div class="col-lg-offset-3 col-lg-9">
+                                                <div class="checkbox">
+                                                    <label class='control-label'>
+                                                        <input type="checkbox" name='register'> Register
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <label class="col-lg-3 control-label">Register Interval</label>
                                             <div class="col-lg-3">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" name='register_interval' class="form-control">
                                                     <span class="input-group-addon">seconds</span>
                                                 </div>
                                             </div>
@@ -308,33 +322,32 @@
                                             <label class="col-lg-3 control-label">Publish Interval</label>
                                             <div class="col-lg-3">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" name='publish_interval' class="form-control">
                                                     <span class="input-group-addon">seconds</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-3 control-label">Register Interval</label>
+                                            <label for="inputAccount" class="col-lg-3 control-label">Subscribe Interval</label>
                                             <div class="col-lg-3">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" name='subscribe_interval' class="form-control">
                                                     <span class="input-group-addon">seconds</span>
                                                 </div>
                                             </div>
                                         </div>
-
                                         <legend>Dialing landline and mobile numbers</legend>
                                         <div class="form-group">
                                             <label class="col-lg-3 control-label">Replace preceding + with</label>
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" name='idd_prefix'>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="col-lg-3 control-label">External line prefix</label>
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" name='prefix'>
                                             </div>
                                         </div>
 
@@ -394,7 +407,8 @@
                                         </select>
                                     </div>
                                 </div>
-<!--                            <div class="form-group">
+<!--
+                                <div class="form-group">
                                     <label for="samplerate" class="col-lg-3 control-label">Sample Rate</label>
                                     <div class="col-lg-9">
                                         <select class='selectpicker' data-width="auto" name="samplerate">
