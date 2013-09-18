@@ -133,6 +133,8 @@ function getAccounts(target_id,form, change, rdata) {
                     $('#account_'+index).append("<i class='pull-right icon-circle text-success'></i>");
                 } else if (data1.info.registration.state === 'failed') {
                     $('#account_'+index).append("<i class='pull-right icon-circle text-danger'></i>");
+                } else if ( data1.info.registration.state === "ended" && value.enabled === true) {
+                    $('#account_'+index).append("<i class='pull-right icon-circle'></i>");
                 }
             });
 
