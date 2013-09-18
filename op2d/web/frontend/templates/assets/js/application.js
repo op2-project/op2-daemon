@@ -193,6 +193,7 @@ function saveListClick(field,account) {
         success: function(){
             $(field).closest('ol').addClass('success');
             //clearTimeout(timeout);
+            getAccounts('account_list','account_info_form', 0);
             timeout = setTimeout(function() {
                 $(field).closest('ol').removeClass('success');
             },2500);
@@ -220,7 +221,7 @@ function updateField(value,value2,key,key1,account_id) {
         value3=value2;
     }
 
-    //console.log("Finding/Updating "+key2);
+    console.log("Finding/Updating "+key + " " +key2);
 
     if ( key2 === "msrp_relay" && value3 !== null ) {
         temp = String(value3).split(':');
@@ -370,7 +371,7 @@ function populateAccountForms(frm, account_id, data) {
             var available_codecs = $(audio_codecs).toArray();
 
             if (value.audio_codec_list === null) {
-                $.each(available_codecs, function(key,value2) {
+                $.each(settings.rtp.audio_codec_list, function(key,value2) {
                     if ( $.inArray(value2, global_list)  != -1) {
                         $("#account_media_form #audio_codecs").append("<li><div class=\"checkbox smaller smaller-top\">"+
                             "<label>"+
@@ -532,6 +533,7 @@ $(document).ready(function() {
                 contentType: 'application/json',
                 success: function(){
                     $(that).addClass('success');
+                    getAccounts('account_list','account_info_form', 0);
                     timeout = setTimeout(function() {
                         //console.log('Timeout'+$(that));
                         $(that).removeClass('success');
