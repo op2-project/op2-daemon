@@ -234,6 +234,8 @@ function updateField(value,value2,key,key1,account_id) {
         for (var i=0; i<Math.ceil(value3.length/2); i++) {
             value3=value3+"*";
         }
+    } else if (key1 === 'message_summary' && key2=== 'enabled') {
+        return;
     }
 
     $("input[name="+ key2 + "]").val(value3).prop('checked',value3).unbind('change').bind('change', function(e) {
