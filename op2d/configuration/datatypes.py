@@ -2,12 +2,15 @@
 import os
 import re
 
+from sipsimple.configuration.datatypes import List
+
 from op2d.resources import ApplicationData
 
-__all__ = ['ApplicationDataPath', 'CustomSoundFile', 'DefaultPath', 'SoundFile']
+__all__ = ['ApplicationDataPath', 'CustomSoundFile', 'DefaultPath', 'SoundFile', 'SpeedDialingList']
 
 
 class ApplicationDataPath(unicode):
+
     def __new__(cls, path):
         path = os.path.normpath(path)
         if path.startswith(ApplicationData.directory+os.path.sep):
@@ -20,11 +23,13 @@ class ApplicationDataPath(unicode):
 
 
 class DefaultPath(object):
+
     def __repr__(self):
         return self.__class__.__name__
 
 
 class SoundFile(object):
+
     def __init__(self, path, volume=100):
         self.path = path
         self.volume = int(volume)
@@ -57,6 +62,7 @@ class SoundFile(object):
 
 
 class CustomSoundFile(object):
+
     def __init__(self, path=DefaultPath, volume=100):
         self.path = path
         self.volume = int(volume)
@@ -93,4 +99,32 @@ class CustomSoundFile(object):
         self.__dict__['path'] = path
     path = property(_get_path, _set_path)
     del _get_path, _set_path
+
+
+class SpeedDialingEntry(object):
+
+    def __init__(self, name, uri):
+        if '|' in name:
+            raise ValueError('invalid entry name: %s' % name)
+        self.name = name
+        self.uri = str(uri)
+
+    def __getstate__(self):
+        return u'%s|%s' % (self.name, self.uri)
+
+    def __setstate__(self, state):
+        name, uri = state.split(u'|', 1)
+        self.__init__(name, uri)
+
+    def __repr__(self):
+        return '%s(%r, %r)' % (self.__class__.__name__, self.name, self.uri)
+
+    @classmethod
+    def from_description(cls, value):
+        name, uri = value.split(u'|', 1)
+        return cls(name, uri)
+
+
+class SpeedDialingList(List):
+    type = SpeedDialingEntry
 

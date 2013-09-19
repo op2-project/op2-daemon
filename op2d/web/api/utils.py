@@ -31,6 +31,14 @@ class SettingsParser(object):
         return [type.type.from_description(v) for v in values]
 
     @classmethod
+    def parse_SpeedDialingList(cls, type, value):
+        if isinstance(value, basestring):
+            values = re.split(r'\s*,\s*', value)
+        else:
+            values = value
+        return [type.type.from_description(v) for v in values]
+
+    @classmethod
     def parse_PortRange(cls, type, value):
         return type(*value.split(':', 1))
 
