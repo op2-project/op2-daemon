@@ -112,9 +112,15 @@ function populateRegistration(index, value) {
             $('#account_'+index).append("<i class='pull-right icon-circle text-danger'></i>");
         } else if ( data1.info.registration.state === "ended" && value.enabled === true) {
             $('#account_'+index).append("<i class='pull-right icon-circle'></i>");
+        } else {
+            $('#account_'+index).append("<i class='pull-right icon-circle text-warning'></i>");
+            timeout = setTimeout(function() {
+                populateRegistration(index, value);
+            },500);
         }
     });
 }
+
 function getAccounts(target_id,form, change, rdata) {
     console.log("Get accounts");
 
