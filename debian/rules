@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+%:
+	dh  $@ --with python2
+
+override_dh_clean:
+	dh_clean
+	rm -rf build dist MANIFEST
+
+override_dh_install:
+	install -m 0644 config.ini.sample debian/op2d/etc/op2d/config.ini
+
+.PHONY: override_dh_clean override_dh_install

@@ -1,0 +1,8 @@
+#
+# OP2 startup options
+#
+
+# Set to yes to enable OP2, once configured properly
+# by editing /etc/op2d/config.ini
+RUN_DAEMON=no
+
