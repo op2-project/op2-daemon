@@ -27,7 +27,11 @@ setup(name         = "op2d",
                      ],
       packages     = find_packages('op2d'),
       package_data = {
-          'op2d.web.frontend': ['templates/*']
+          'op2d.web.frontend': ['templates/*.html',
+                                'templates/assets/css/*',
+                                'templates/assets/font/*',
+                                'templates/assets/images/*',
+                                'templates/assets/js/*']
       },
       scripts      = ['op2-daemon'],
       data_files   = [('/var/spool/op2d', []),
