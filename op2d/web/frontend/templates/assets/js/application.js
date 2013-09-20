@@ -190,11 +190,13 @@ function getAccounts(target_id,form, change, rdata) {
             });
 
             //console.log("At "+value.id + "Account "+ account) ;
+            console.log("Default account "+settings.default_account);
             if ( value.id === settings.default_account && change === 1) {
+                $('[id^="account_"]').removeClass('selected');
                 console.log("Populate and select");
                 $('#account_'+index).addClass('selected');
                 populateAccountForms(form,value.id, value);
-            } else if (value.id === account) {
+            } else if (value.id === account && change === 0) {
                 console.log("Populate");
                 $('#account_'+index).addClass('selected');
                 populateAccountForms(form,value.id, value);
@@ -202,9 +204,11 @@ function getAccounts(target_id,form, change, rdata) {
             // console.log(value);
         });
 
+        $("[name=nav_account_list]").unbind('change.myEvents');
         $("[name=nav_account_list]").selectpicker('refresh');
         $("[name=nav_account_list]").selectpicker('val', settings.default_account);
         setDefaultAccount();
+
         $('#remove_account').click(function () {
             removeAccount();
         });
