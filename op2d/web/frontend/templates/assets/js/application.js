@@ -398,6 +398,7 @@ function populateAccountForms(frm, account_id, data) {
         $("#password").prop('disabled', false);
         $("#password").prop('enabled', true);
         $("#password").closest('.form-group').show();
+        $('#remove_account').prop('disabled', false).prop('enabled', true).addClass('btn-disabled');
     } else {
         $('#account_info_tab a').tab('show');
         $('#account_advanced_tab').fadeOut();
@@ -405,6 +406,7 @@ function populateAccountForms(frm, account_id, data) {
         $('#account_network_tab').fadeOut();
         $("#password").prop('disabled', true);
         $("#password").closest('.form-group').hide();
+        $('#remove_account').prop('disabled', true).addClass('btn-disabled');
     }
 
     $("#account_media_form #audio_codecs").empty();
