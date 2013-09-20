@@ -121,6 +121,37 @@ function populateRegistration(index, value) {
     });
 }
 
+function setDefaultAccount() {
+    //console.log("add default handler");
+    $("[name=nav_account_list]").unbind('change.myEvents').bind('change.myEvents', function() {
+        //console.log("c add default handler");
+        data = "{\"default_account\": \"" + $("[name=nav_account_list]").val()+"\"}";
+
+        console.log(data);
+        var that = this;
+        $.ajax({
+            type: "PUT",
+            url: "api/v1/settings",
+            data: data,
+            contentType: 'application/json',
+            success: function(){
+                $("[name=nav_account_list]").parent('div').find('button').addClass("btn-success").blur();
+                $("[name=nav_account_list]").parent().parent().addClass('has-success');
+                console.log("Updated dault account" + data );
+                timeout = setTimeout(function() {
+                    $("[name=nav_account_list]").parent('div').find('button').removeClass("btn-success");
+                    $("[name=nav_account_list]").parent().parent().removeClass('has-success');
+                },2500);
+                $("[name=nav_account_list]").unbind('change.myEvents');
+                getSettings();
+            },
+            error: function(){
+                console.log("Error");
+            }
+        });
+    });
+}
+
 function getAccounts(target_id,form, change, rdata) {
     console.log("Get accounts");
 
@@ -173,7 +204,7 @@ function getAccounts(target_id,form, change, rdata) {
 
         $("[name=nav_account_list]").selectpicker('refresh');
         $("[name=nav_account_list]").selectpicker('val', settings.default_account);
-
+        setDefaultAccount();
         $('#remove_account').click(function () {
             removeAccount();
         });
@@ -185,6 +216,7 @@ function getSettings() {
         settings = data;
         getAccounts('account_list','account_info_form');
         populateSpeedDial();
+        //setDefaultAccount();
     });
     $.getJSON('api/v1/system/audio_codecs', function(data) {
         audio_codecs = data.audio_codecs;
@@ -570,7 +602,6 @@ function populateSpeedDial() {
     }
     $.each(settings.op2.speed_dialing, function(index,value){
         count++;
-
         value = value.split('|');
         updateSpeedDial(count, value[0],"name");
         updateSpeedDial(count, value[1],"uri");
