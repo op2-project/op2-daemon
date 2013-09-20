@@ -184,6 +184,7 @@ function getSettings() {
     $.getJSON('api/v1/settings', function(data) {
         settings = data;
         getAccounts('account_list','account_info_form');
+        populateSpeedDial();
     });
     $.getJSON('api/v1/system/audio_codecs', function(data) {
         audio_codecs = data.audio_codecs;
@@ -492,6 +493,87 @@ function populateAudioCodecs() {
                 "</label>"+
                 "</div></li>"
         );
+    });
+}
+function updateSpeedDial(count, name,field) {
+    console.log("Finding:"+field+"_"+count);
+    $("input[name="+field+"_" +count + "]").val(name).unbind('change').bind('change', function(e) {
+            var that = this;
+
+            if ($("input[name=name_" +count + "]").val() !=='' && $("input[name=uri_" +count + "]").val() !== '') {
+                data = "{\"op2\":{ \"speed_dialing\": ";
+                data1 = [];
+                for (var i=1;i<4;i++) {
+                    if ($("input[name=name_" +i + "]").val() !=='' && $("input[name=uri_" +i + "]").val() !== '') {
+                        data1.push($("input[name=name_" + i + "]").val() +"|" + $("input[name=uri_" + i + "]").val());
+                    }
+                }
+                data = data + JSON.stringify(data1) + '}}' ;
+                //console.log(data);
+                $.ajax({
+                    type: "PUT",
+                    url: "api/v1/settings",
+                    data: data,
+                    contentType: 'application/json',
+                    success: function(rdata) {
+
+                        $('#speed_dialing_form div').addClass('has-success');
+                        timeout = setTimeout(function() {
+                            $('#speed_dialing_form div').removeClass('has-success');
+                        },2500);
+                        getSettings();
+                        console.log("Updated speed dialing" + data );
+                    },
+                    error: function(){
+                        $(that).closest('.form-group').addClass("has-error");
+                        //$(that).focus();
+                        console.log("Error");
+                        //return false;
+                    }
+                });
+            }
+
+
+            // console.log(data);
+            // $.ajax({
+            //     type: "PUT",
+            //     url: "api/v1/accounts/"+account_id,
+            //     data: data,
+            //     contentType: 'application/json',
+            //     success: function(rdata) {
+            //         $(that).closest('.form-group').addClass("has-success");
+            //         timeout = setTimeout(function() {
+            //             $(that).closest('.form-group').removeClass('has-success');
+            //         },2500);
+            //         console.log("Updated " + key +":"+ key2);
+            //         getAccounts('account_list','account_info_form', 0, rdata);
+            //     },
+            //     error: function(){
+            //         $(that).closest('.form-group').addClass("has-error");
+            //         //$(that).focus();
+            //         console.log("Error");
+            //         //return false;
+            //     }
+            // });
+            //}
+        }).unbind('focus').bind('focus', function() {
+            $(this).closest('.form-group').removeClass('has-error');
+            $(this).closest('.form-group').removeClass('has-success');
+        });
+
+}
+function populateSpeedDial() {
+    var count = 0;
+    for (var i=1;i<4;i++) {
+        updateSpeedDial(i, "","name");
+        updateSpeedDial(i, "","uri");
+    }
+    $.each(settings.op2.speed_dialing, function(index,value){
+        count++;
+
+        value = value.split('|');
+        updateSpeedDial(count, value[0],"name");
+        updateSpeedDial(count, value[1],"uri");
     });
 }
 
