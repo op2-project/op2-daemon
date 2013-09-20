@@ -360,12 +360,14 @@ function populateAccountForms(frm, account_id, data) {
         $('#account_network_tab').show();
         $("#password").prop('disabled', false);
         $("#password").prop('enabled', true);
+        $("#password").closest('.form-group').show();
     } else {
         $('#account_info_tab a').tab('show');
         $('#account_advanced_tab').fadeOut();
         $('#account_server_tab').fadeOut();
         $('#account_network_tab').fadeOut();
         $("#password").prop('disabled', true);
+        $("#password").closest('.form-group').hide();
     }
 
     $("#account_media_form #audio_codecs").empty();
