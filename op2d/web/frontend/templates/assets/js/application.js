@@ -513,24 +513,6 @@ function populateSystemTab() {
     });
 }
 
-function populateAudioCodecs() {
-    var global_list = $(settings.rtp.audio_codec_list).toArray();
-
-    $("#audio_codecs_general").empty();
-
-    $.each(audio_codecs, function(key,value2) {
-        var check="";
-        if ( $.inArray(value2, global_list) != -1) {
-            check="checked";
-        }
-        $("#audio_codecs_general").append("<li><div class=\"checkbox smaller smaller-top\">"+
-                "<label>"+
-                "<input name=\""+value2+"\" type=\"checkbox\"" + check +">"+ value2 +
-                "</label>"+
-                "</div></li>"
-        );
-    });
-}
 function updateSpeedDial(count, name,field) {
     console.log("Finding:"+field+"_"+count);
     $("input[name="+field+"_" +count + "]").val(name).unbind('change').bind('change', function(e) {
@@ -596,8 +578,8 @@ function updateSpeedDial(count, name,field) {
             $(this).closest('.form-group').removeClass('has-error');
             $(this).closest('.form-group').removeClass('has-success');
         });
-
 }
+
 function populateSpeedDial() {
     var count = 0;
     for (var i=1;i<4;i++) {
@@ -689,7 +671,7 @@ $(document).ready(function() {
         } else if ( $(e.target).attr('href') == "#start_tab" ) {
             $('.navbar-nav li').removeClass('active');
         } else if ( $(e.target).attr('href') == "#audio_tab" ) {
-            populateAudioCodecs();
+            //populateAudioCodecs();
         }
         //e.relatedTarget // previous tab
     });
