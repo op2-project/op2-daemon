@@ -135,18 +135,18 @@ function setDefaultAccount() {
             data: data,
             contentType: 'application/json',
             success: function(){
-                $("[name=nav_account_list]").parent('div').find('button').addClass("btn-success").blur();
-                $("[name=nav_account_list]").parent().parent().addClass('has-success');
                 console.log("Updated dault account" + data );
+                $(that).parent().find('.bootstrap-select > button').addClass('btn-success').blur();
                 timeout = setTimeout(function() {
-                    $("[name=nav_account_list]").parent('div').find('button').removeClass("btn-success");
-                    $("[name=nav_account_list]").parent().parent().removeClass('has-success');
+                    $(that).parent().find('.bootstrap-select > button').removeClass("btn-success");
+                    //$("[name=nav_account_list]").parent().parent().removeClass('has-success');
                 },2500);
                 $("[name=nav_account_list]").unbind('change.myEvents');
                 getSettings();
             },
             error: function(){
                 console.log("Error");
+                $(that).parent().find('.bootstrap-select > button').addClass('btn-danger');
             }
         });
     });
