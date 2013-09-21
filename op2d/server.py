@@ -11,6 +11,7 @@ from threading import Event
 from zope.interface import implements
 
 from op2d.accounts import AccountModel
+from op2d.bonjour import BonjourServices
 from op2d.configuration.account import AccountExtension, BonjourAccountExtension
 from op2d.configuration.settings import SIPSimpleSettingsExtension
 from op2d.resources import ApplicationData
@@ -34,11 +35,13 @@ class OP2Daemon(object):
         SIPSimpleSettings.register_extension(SIPSimpleSettingsExtension)
 
         self.account_model = AccountModel()
+        self.bonjour_services = BonjourServices()
         self.session_manager = SessionManager()
         self.web_handler = WebHandler()
 
     def start(self):
         self.account_model.start()
+        self.bonjour_services.start()
         self.session_manager.start()
         notification_center = NotificationCenter()
         notification_center.add_observer(self)
@@ -50,6 +53,7 @@ class OP2Daemon(object):
             return
         self.stopping = True
         self.session_manager.stop()
+        self.bonjour_services.stop()
         self.account_model.stop()
         self.application.stop()
 
