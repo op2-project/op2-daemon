@@ -26,6 +26,7 @@ class OP2Daemon(object):
 
     def __init__(self):
         self.application = SIPApplication()
+        self.stopping = False
         self.stop_event = Event()
 
         Account.register_extension(AccountExtension)
@@ -45,11 +46,12 @@ class OP2Daemon(object):
         self.application.start(FileStorage(ApplicationData.directory))
 
     def stop(self):
+        if self.stopping:
+            return
+        self.stopping = True
         self.session_manager.stop()
         self.account_model.stop()
         self.application.stop()
-        self.application.thread.join()
-        self.stop_event.set()
 
     def handle_notification(self, notification):
         handler = getattr(self, '_NH_%s' % notification.name, Null)
@@ -64,4 +66,5 @@ class OP2Daemon(object):
 
     def _NH_SIPApplicationDidEnd(self, notification):
         log.msg('SIP application ended')
+        self.stop_event.set()
 

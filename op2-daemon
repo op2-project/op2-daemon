@@ -63,8 +63,9 @@ def main():
         sys.exit(1)
 
     def stop_server(*args):
-        log.msg('Stopping %s...' % fullname)
-        server.stop()
+        if not server.stopping:
+            log.msg('Stopping %s...' % fullname)
+            server.stop()
 
     def kill_server(*args):
         log.msg('Killing %s...' % fullname)
@@ -75,7 +76,10 @@ def main():
 
     try:
         server.start()
-        signal.pause()
+        while True:
+            signal.pause()
+            if server.stopping:
+                break
         process.signals.add_handler(signal.SIGALRM, kill_server)
         signal.alarm(5)
         server.stop_event.wait(5)
