@@ -1,7 +1,21 @@
 
+from application.python import Null
 from twisted.web.resource import Resource
+from twisted.web.server import Site
 
-__all__ = ['WSGIRootResource']
+__all__ = ['MySite', 'WSGIRootResource']
+
+
+class MySite(Site):
+
+    def __init__(self, resource):
+        Site.__init__(self, resource, logPath='.')
+
+    def _openLogFile(self, path):
+        # We pass a fake path in __init__ so that this function will be called
+        # and we can override the default logging with Null.
+        # TODO: replace this with a facility to log to a file.
+        return Null
 
 
 # Copied from AutoBahn Python

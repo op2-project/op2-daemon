@@ -3,13 +3,12 @@ import os
 
 from twisted.internet import reactor
 from twisted.python.threadpool import ThreadPool
-from twisted.web.server import Site
 from twisted.web.static import File
 from twisted.web.wsgi import WSGIResource
 from werkzeug.wsgi import DispatcherMiddleware
 
 from op2d.web import api, frontend
-from op2d.web.utils import WSGIRootResource
+from op2d.web.utils import MySite, WSGIRootResource
 
 __all__ = ['get_site']
 
@@ -33,5 +32,5 @@ def get_site():
     # root resource, aggregating the WSGI app and static assets
     root_resource = WSGIRootResource(app_resource, {'assets': static_resource})
 
-    return Site(root_resource)
+    return MySite(root_resource)
 
