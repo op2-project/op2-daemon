@@ -9,5 +9,6 @@ class Configuration(ConfigSection):
     __cfgfile__ = cfg_filename
     __section__ = 'op2d'
 
-    web_port = ConfigSetting(type=Port, value=8088)
+    hal_backend = ConfigSetting(type=str, value=None)
+    web_port    = ConfigSetting(type=Port, value=8088)
 

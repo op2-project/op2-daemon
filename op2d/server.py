@@ -14,6 +14,7 @@ from op2d.accounts import AccountModel
 from op2d.bonjour import BonjourServices
 from op2d.configuration.account import AccountExtension, BonjourAccountExtension
 from op2d.configuration.settings import SIPSimpleSettingsExtension
+from op2d.hal import HardwareAbstractionLayer
 from op2d.resources import ApplicationData
 from op2d.sessions import SessionManager
 from op2d.web import WebHandler
@@ -36,12 +37,14 @@ class OP2Daemon(object):
 
         self.account_model = AccountModel()
         self.bonjour_services = BonjourServices()
+        self.hal = HardwareAbstractionLayer()
         self.session_manager = SessionManager()
         self.web_handler = WebHandler()
 
     def start(self):
         self.account_model.start()
         self.bonjour_services.start()
+        self.hal.start()
         self.session_manager.start()
         notification_center = NotificationCenter()
         notification_center.add_observer(self)
@@ -53,6 +56,7 @@ class OP2Daemon(object):
             return
         self.stopping = True
         self.session_manager.stop()
+        self.hal.stop()
         self.bonjour_services.stop()
         self.account_model.stop()
         self.application.stop()
