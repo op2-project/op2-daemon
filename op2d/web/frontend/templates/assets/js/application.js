@@ -74,6 +74,10 @@ String.prototype.capitalize = function(lower) {
     return (lower ? this.toLowerCase() : this).replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 };
 
+function notifyError(data) {
+    alertify.error("<strong>Error "+ data.responseJSON.msg.split(":")[0] +"</strong>:<br/> "+ data.responseJSON.msg.split(/:(.+)?/)[1]);
+}
+
 function getAccountId(){
     var account = $('[id^="account_"] .selected').clone();
     account.find("i").remove();
@@ -133,6 +137,7 @@ function setDefaultAccount() {
             type: "PUT",
             url: "api/v1/settings",
             data: data,
+            dataType:"json",
             contentType: 'application/json',
             success: function(){
                 console.log("Updated dault account" + data );
@@ -239,6 +244,7 @@ function saveListClick(field,account) {
         url: "api/v1/accounts/"+account,
         data: "{\"rtp\":{\"audio_codec_list\": "+ JSON.stringify(enabled_list) + "}}",
         contentType: 'application/json',
+        dataType:"json",
         success: function(){
             $(field).closest('ol').addClass('success');
             //clearTimeout(timeout);
@@ -247,11 +253,12 @@ function saveListClick(field,account) {
                 $(field).closest('ol').removeClass('success');
             },2500);
         },
-        error: function(){
+        error: function(rdata){
             // $(that).closest('.form-group').addClass("has-error");
             console.log("Error");
             $(field).closest('ol').addClass('error');
             $(field).focus();
+            notifyError(rdata);
             //return false;
        }
     });
@@ -320,6 +327,7 @@ function updateField(value,value2,key,key1,account_id) {
             type: "PUT",
             url: "api/v1/accounts/"+account_id,
             data: data,
+            dataType:"json",
             contentType: 'application/json',
             success: function(rdata) {
                 $(that).closest('.form-group').addClass("has-success");
@@ -329,10 +337,11 @@ function updateField(value,value2,key,key1,account_id) {
                 console.log("Updated " + key +":"+ key2);
                 getAccounts('account_list','account_info_form', 0, rdata);
             },
-            error: function(){
+            error: function(rdata){
                 $(that).closest('.form-group').addClass("has-error");
                 //$(that).focus();
                 console.log("Error");
+                notifyError(rdata);
                 //return false;
             }
         });
@@ -369,6 +378,7 @@ function updateField(value,value2,key,key1,account_id) {
             type: "PUT",
             url: "api/v1/accounts/"+account_id,
             data: data,
+            dataType:"json",
             contentType: 'application/json',
             success: function(){
                 $("select[name="+key2+"]").parent('div').find('button').addClass("btn-success").blur();
@@ -380,8 +390,9 @@ function updateField(value,value2,key,key1,account_id) {
                 },2500);
                 getAccounts('account_list','account_info_form', 0);
             },
-            error: function(){
+            error: function(rdata){
                 console.log("Error");
+                notifyError(rdata);
             }
         });
     });
@@ -545,38 +556,15 @@ function updateSpeedDial(count, name,field) {
                         getSettings();
                         console.log("Updated speed dialing" + data );
                     },
-                    error: function(){
+                    error: function(rdata){
                         $(that).closest('.form-group').addClass("has-error");
                         //$(that).focus();
                         console.log("Error");
+                        notifyError(rdata);
                         //return false;
                     }
                 });
             }
-
-
-            // console.log(data);
-            // $.ajax({
-            //     type: "PUT",
-            //     url: "api/v1/accounts/"+account_id,
-            //     data: data,
-            //     contentType: 'application/json',
-            //     success: function(rdata) {
-            //         $(that).closest('.form-group').addClass("has-success");
-            //         timeout = setTimeout(function() {
-            //             $(that).closest('.form-group').removeClass('has-success');
-            //         },2500);
-            //         console.log("Updated " + key +":"+ key2);
-            //         getAccounts('account_list','account_info_form', 0, rdata);
-            //     },
-            //     error: function(){
-            //         $(that).closest('.form-group').addClass("has-error");
-            //         //$(that).focus();
-            //         console.log("Error");
-            //         //return false;
-            //     }
-            // });
-            //}
         }).unbind('focus').bind('focus', function() {
             $(this).closest('.form-group').removeClass('has-error');
             $(this).closest('.form-group').removeClass('has-success');
@@ -647,6 +635,7 @@ $(document).ready(function() {
                 url: "api/v1/accounts/"+account,
                 data: "{\"rtp\":{\"audio_codec_list\": "+ JSON.stringify(enabled_list) + "}}",
                 contentType: 'application/json',
+                dataType:"json",
                 success: function(){
                     $(that).addClass('success');
                     getAccounts('account_list','account_info_form', 0);
@@ -655,8 +644,9 @@ $(document).ready(function() {
                         $(that).removeClass('success');
                     },2500);
                 },
-                error: function(){
+                error: function(rdata){
                     console.log("Error");
+                    notifyError(rdata);
                     $(that).addClass('error');
                     //return false;
                }
@@ -691,14 +681,16 @@ $(document).ready(function() {
             type: "POST",
             url: "api/v1/accounts",
             data: data ,
+            dataType:"json",
             contentType: 'application/json',
             success: function(){
                 $("#myModal").modal('hide');
                 getAccounts('account_list','account_info_form');
                 return false;
             },
-            error: function(){
+            error: function(rdata){
                 console.log("Error");
+                notifyError(rdata);
                 return false;
             }
         });
