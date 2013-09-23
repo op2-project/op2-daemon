@@ -8,29 +8,29 @@
     <meta name="author" content="">
 
     <title>
-
         OP&#178; Configuration
-
     </title>
 
     <!-- Bootstrap core CSS -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="./assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="./assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="./assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="./assets/ico/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="./assets/images/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="./assets/ico/apple-touch-icon-144-precomposed.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="./assets/ico/apple-touch-icon-114-precomposed.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="./assets/ico/apple-touch-icon-72-precomposed.png" />
+    <link rel="apple-touch-icon-precomposed" href="./assets/ico/apple-touch-icon-57-precomposed.png" />
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" />
 
     <!-- Place anything custom after this. -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/jquery.dialog2.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-select.css">
-    <!-- include the core styles -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!--  Font Awesome -->
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="assets/css/jquery.dialog2.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap-select.css" />
+
+    <!-- Alertify -->
     <link rel="stylesheet" href="assets/css/alertify.core.css" />
-    <!-- include a theme, can be included into the core instead of 2 separate files -->
     <link rel="stylesheet" href="assets/css/alertify.bootstrap.css" />
 </head>
 
@@ -58,7 +58,7 @@
                         <li><a href="#dialing_tab" data-toggle="tab"><i class='icon-phone-sign'></i> Speed Dialing</a></li>
                         <li><a href="#system_tab" data-toggle="tab"><i class='icon-desktop'></i> System</a></li>
                     </ul>
-                    <form class="navbar-form" role="call">
+                    <form class="navbar-form">
                         <div class="input-group col-sm-3 col-md-3 col-lg-3 pull-right">
                             <input type="text" class="form-control" placeholder='SIP address/number'>
                             <span class="input-group-btn">
@@ -87,7 +87,7 @@
                             <p>With the interface you can setup and configure the accounts. You can also make calls</p>
                         </div>
                         <div class="col-md-3">
-                            <img src="assets/images/logo.png" class="img-thumbnail">
+                            <img src="assets/images/logo.png" alt="OP^2 logo" class="img-thumbnail">
                         </div>
                     </div>
                 </div>
@@ -125,13 +125,13 @@
                                         </div>
                                         <hr>
                                         <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-2 control-label">Display name</label>
+                                            <label for="display_name" class="col-lg-2 control-label">Display name</label>
                                             <div class="col-lg-10">
-                                                <input type="text" class="form-control" name="display_name" placeholder="Display name" value='test' autocomplete="off">
+                                                <input type="text" id="display_name" class="form-control" name="display_name" placeholder="Display name" value='test' autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="Password" class="col-lg-2 control-label">Password</label>
+                                            <label for="password" class="col-lg-2 control-label">Password</label>
                                             <div class="col-lg-10">
                                                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" autocomplete="off">
                                             </div>
@@ -142,115 +142,123 @@
 
                                 <div class="tab-pane" id="account_media">
                                     <form class="form-horizontal" id="account_media_form" role="form">
-                                        <legend>Audio Codecs</legend>
-                                        <ol class='nav' id='audio_codecs'></ol>
-                                        <div class="col-lg-offset-10 col-lg-2">
-                                            <button id='reset_audio_codecs' class='btn btn-sm btn-default btn-disabled pull-right' disabled>Reset</button>
-                                        </div>
-                                        <legend>RTP Options</legend>
-                                        <div class="form-group smaller">
-                                            <div class="col-lg-offset-2 col-lg-10">
-                                                <div class="checkbox smaller">
-                                                    <label class='control-label'>
-                                                      <input type="checkbox" name='rtp_inband_dtmf'> Send inband DTMF
-                                                  </label>
-                                              </div>
+                                        <fieldset>
+                                            <legend>Audio Codecs</legend>
+                                            <ol class='nav' id='audio_codecs'></ol>
+                                            <div class="col-lg-offset-10 col-lg-2">
+                                                <button id='reset_audio_codecs' class='btn btn-sm btn-default btn-disabled pull-right' disabled>Reset</button>
                                             </div>
-                                        </div>
-                                        <hr>
-                                        <div class="form-group">
-                                            <label for="" class="col-lg-2 control-label">SRTP Encryption</label>
-                                            <div class="col-lg-10">
-                                                <select id='test' class='selectpicker' data-width="auto" name="srtp_encryption">
-                                                    <option value="optional">Optional</option>
-                                                    <option value="disabled">Disabled</option>
-                                                    <option value="mandatory">Mandatory</option>
-                                                </select>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend>RTP Options</legend>
+                                            <div class="form-group smaller">
+                                                <div class="col-lg-offset-2 col-lg-10">
+                                                    <div class="checkbox smaller">
+                                                        <label class='control-label'>
+                                                          <input type="checkbox" name='rtp_inband_dtmf'> Send inband DTMF
+                                                      </label>
+                                                  </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <hr>
+                                            <div class="form-group">
+                                                <label for="srtp_encryption" class="col-lg-2 control-label">SRTP Encryption</label>
+                                                <div class="col-lg-10">
+                                                    <select id="srtp_encryption" class='selectpicker' data-width="auto" name="srtp_encryption">
+                                                        <option value="optional">Optional</option>
+                                                        <option value="disabled">Disabled</option>
+                                                        <option value="mandatory">Mandatory</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </fieldset>
                                     </form>
                                 </div>
 
                                 <div class="tab-pane" id="account_server">
                                     <form class="form-horizontal" id="account_server_form" role="form">
-
-                                        <legend>SIP Proxy</legend>
-                                        <div class="form-group">
-                                            <div class="col-lg-offset-3 col-lg-9">
-                                                <div class="checkbox">
-                                                    <label class='control-label'>
-                                                        <input type="checkbox" name='always_use_my_proxy'> Always use my proxy for outgoing sessions
-                                                    </label>
+                                        <fieldset>
+                                            <legend>SIP Proxy</legend>
+                                            <div class="form-group">
+                                                <div class="col-lg-offset-3 col-lg-9">
+                                                    <div class="checkbox">
+                                                        <label class='control-label'>
+                                                            <input type="checkbox" name='always_use_my_proxy'> Always use my proxy for outgoing sessions
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-3 control-label">Outbound Proxy</label>
-                                            <div class="col-lg-3">
-                                                <input type="text" class="form-control" name="outbound_proxy">
-                                            </div>
-                                            <label for="sip_port" class="col-lg-1 control-label">Port</label>
-                                            <div class="col-lg-2">
-                                                <input type="text" class="form-control" name="sip_port" value='5060'>
-                                            </div>
+                                            <div class="form-group">
+                                                <label for="outbound_proxy" class="col-lg-3 control-label">Outbound Proxy</label>
+                                                <div class="col-lg-3">
+                                                    <input type="text" class="form-control" id="outbound_proxy" name="outbound_proxy">
+                                                </div>
+                                                <label for="sip_port" class="col-lg-1 control-label">Port</label>
+                                                <div class="col-lg-2">
+                                                    <input type="text" class="form-control" id="sip_port" name="sip_port" value='5060'>
+                                                </div>
 
-                                            <label for="proxy_transport" class="col-lg-1 control-label">Transport</label>
-                                            <div class="col-lg-2">
-                                                <select class='selectpicker' data-width="auto" name="proxy_transport">
-                                                    <option value="udp">UDP</option>
-                                                    <option value="tcp">TCP</option>
-                                                    <option value="tls">TLS</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-3 control-label">Auth Username</label>
-                                            <div class="col-lg-3">
-                                                <input type="text" class="form-control" name="username">
-                                            </div>
-                                        </div>
-
-                                        <legend>MSRP Relay</legend>
-                                        <div class="form-group">
-                                            <div class="col-lg-offset-3 col-lg-9">
-                                                <div class="checkbox">
-                                                    <label class='control-label'>
-                                                        <input type="checkbox" name='use_msrp_relay_for_outbound'> Always use my relay for outgoing sessions
-                                                    </label>
+                                                <label for="proxy_transport" class="col-lg-1 control-label">Transport</label>
+                                                <div class="col-lg-2">
+                                                    <select class='selectpicker' id="proxy_transport" data-width="auto" name="proxy_transport">
+                                                        <option value="udp">UDP</option>
+                                                        <option value="tcp">TCP</option>
+                                                        <option value="tls">TLS</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="msrp_relay" class="col-lg-3 control-label">Relay</label>
-                                            <div class="col-lg-3">
-                                                <input type="text" class="form-control" placeholder='Relay address taken from DNS' name="msrp_relay">
+                                            <div class="form-group">
+                                                <label for="username" class="col-lg-3 control-label">Auth Username</label>
+                                                <div class="col-lg-3">
+                                                    <input type="text" class="form-control" id='username' name="username">
+                                                </div>
                                             </div>
-                                            <label for="inputAccount" class="col-lg-1 control-label">Port</label>
-                                            <div class="col-lg-2">
-                                                <input type="text" class="form-control" name="msrp_port" value='2855'>
-                                            </div>
-                                            <label for="inputAccount" class="col-lg-1 control-label">Transport</label>
-                                            <div class="col-lg-2">
-                                                <select class='selectpicker' data-width="auto" name="msrp_general_transport">
-                                                    <option value="tls">TLS</option>
-                                                    <option value="tcp">TCP</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                        </fieldset>
 
-                                        <legend>Extra Server Settings</legend>
-                                        <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-3 control-label">Voicemail URI</label>
-                                            <div class="col-lg-9">
-                                                <input type="text" class="form-control" placeholder='Discovered by subscribing to the account' name="voicemail_uri">
+                                        <fieldset>
+                                            <legend>MSRP Relay</legend>
+                                            <div class="form-group">
+                                                <div class="col-lg-offset-3 col-lg-9">
+                                                    <div class="checkbox">
+                                                        <label class='control-label'>
+                                                            <input type="checkbox" name='use_msrp_relay_for_outbound'> Always use my relay for outgoing sessions
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-3 control-label">XCAP Root URL</label>
-                                            <div class="col-lg-9">
-                                                <input type="text" class="form-control" placeholder='Taken from the DNS TXT record' name="xcap_root">
+                                            <div class="form-group">
+                                                <label for="msrp_relay" class="col-lg-3 control-label">Relay</label>
+                                                <div class="col-lg-3">
+                                                    <input type="text" id="msrp_relay" class="form-control" placeholder='Relay address taken from DNS' name="msrp_relay">
+                                                </div>
+                                                <label for="msrp_port" class="col-lg-1 control-label">Port</label>
+                                                <div class="col-lg-2">
+                                                    <input type="text" class="form-control" id="msrp_port" name="msrp_port" value='2855'>
+                                                </div>
+                                                <label for="msrp_general_transport" class="col-lg-1 control-label">Transport</label>
+                                                <div class="col-lg-2">
+                                                    <select class='selectpicker' data-width="auto" id="msrp_general_transport" name="msrp_general_transport">
+                                                        <option value="tls">TLS</option>
+                                                        <option value="tcp">TCP</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </fieldset>
+
+                                        <fieldset>
+                                            <legend>Extra Server Settings</legend>
+                                            <div class="form-group">
+                                                <label for="voicemail_uri" class="col-lg-3 control-label">Voicemail URI</label>
+                                                <div class="col-lg-9">
+                                                    <input type="text" class="form-control" placeholder='Discovered by subscribing to the account' id='voicemail_uri' name="voicemail_uri">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="xcap_root" class="col-lg-3 control-label">XCAP Root URL</label>
+                                                <div class="col-lg-9">
+                                                    <input type="text" class="form-control" placeholder='Taken from the DNS TXT record' id="xcap_root" name="xcap_root">
+                                                </div>
+                                            </div>
 <!--
                                         <div class="form-group">
                                             <label for="inputAccount" class="col-lg-3 control-label">Server Tools URL</label>
@@ -266,93 +274,98 @@
                                             </div>
                                         </div>
 -->
+                                        </fieldset>
                                     </form>
                                 </div>
 
                                 <div class="tab-pane" id="account_network">
                                     <form class="form-horizontal" id="account_network_form" role="form">
-
-                                        <legend>Network Settings</legend>
-                                        <div class="form-group">
-                                            <div class="col-lg-offset-3 col-lg-10">
-                                                <div class="checkbox">
-                                                    <label class='control-label'>
-                                                        <input type="checkbox" name='use_ice'> Use ICE
-                                                    </label>
+                                        <fieldset>
+                                            <legend>Network Settings</legend>
+                                            <div class="form-group">
+                                                <div class="col-lg-offset-3 col-lg-10">
+                                                    <div class="checkbox">
+                                                        <label class='control-label'>
+                                                            <input type="checkbox" name='use_ice'> Use ICE
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="form-group">
-                                            <label for="relay_transport_general" class="col-lg-3 control-label">MSRP Transport</label>
-                                            <div class="col-lg-9">
-                                                <select class='selectpicker' data-width="auto" name="transport">
-                                                    <option value="tls">TLS</option>
-                                                    <option value="tcp">TCP</option>
-                                                </select>
+                                            <div class="form-group">
+                                                <label for="relay_transport_general" class="col-lg-3 control-label">MSRP Transport</label>
+                                                <div class="col-lg-9">
+                                                    <select id="relay_transport_general" class='selectpicker' data-width="auto" name="transport">
+                                                        <option value="tls">TLS</option>
+                                                        <option value="tcp">TCP</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </fieldset>
                                     </form>
                                 </div>
 
                                  <div class="tab-pane" id="account_advanced">
                                     <form class="form-horizontal" id="account_advanced_form" role="form">
+                                        <fieldset>
+                                            <legend>SIP Settings</legend>
+                                            <div class="form-group">
+                                                <div class="col-lg-offset-3 col-lg-9">
+                                                    <div class="checkbox">
+                                                        <label class='control-label'>
+                                                            <input type="checkbox" name='register'> Register
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">Register Interval</label>
+                                                <div class="col-lg-3">
+                                                    <div class="input-group">
+                                                        <input type="text" name='register_interval' class="form-control">
+                                                        <span class="input-group-addon">seconds</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <button id='reregister' data-loading-text="Re-registering" class="btn btn-primary"><i class='icon-refresh'></i> Re-register</button>
+                                                </div>
+                                            </div>
 
-                                        <legend>SIP Settings</legend>
-                                        <div class="form-group">
-                                            <div class="col-lg-offset-3 col-lg-9">
-                                                <div class="checkbox">
-                                                    <label class='control-label'>
-                                                        <input type="checkbox" name='register'> Register
-                                                    </label>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">Publish Interval</label>
+                                                <div class="col-lg-3">
+                                                    <div class="input-group">
+                                                        <input type="text" name='publish_interval' class="form-control">
+                                                        <span class="input-group-addon">seconds</span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-lg-3 control-label">Register Interval</label>
-                                            <div class="col-lg-3">
-                                                <div class="input-group">
-                                                    <input type="text" name='register_interval' class="form-control">
-                                                    <span class="input-group-addon">seconds</span>
+                                            <div class="form-group">
+                                                <label for='subscribe_interval' class="col-lg-3 control-label">Subscribe Interval</label>
+                                                <div class="col-lg-3">
+                                                    <div class="input-group">
+                                                        <input type="text" name='subscribe_interval' id='subscribe_interval' class="form-control">
+                                                        <span class="input-group-addon">seconds</span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2">
-                                                <button id='reregister' data-loading-text="Re-registering" class="btn btn-primary"><i class='icon-refresh'></i> Re-register</button>
+                                        </fieldset>
+                                        <fieldset>
+                                            <legend>Dialing landline and mobile numbers</legend>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">Replace preceding + with</label>
+                                                <div class="col-lg-3">
+                                                    <input type="text" class="form-control" name='idd_prefix'>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="form-group">
-                                            <label class="col-lg-3 control-label">Publish Interval</label>
-                                            <div class="col-lg-3">
-                                                <div class="input-group">
-                                                    <input type="text" name='publish_interval' class="form-control">
-                                                    <span class="input-group-addon">seconds</span>
+                                            <div class="form-group">
+                                                <label class="col-lg-3 control-label">External line prefix</label>
+                                                <div class="col-lg-3">
+                                                    <input type="text" class="form-control" name='prefix'>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="inputAccount" class="col-lg-3 control-label">Subscribe Interval</label>
-                                            <div class="col-lg-3">
-                                                <div class="input-group">
-                                                    <input type="text" name='subscribe_interval' class="form-control">
-                                                    <span class="input-group-addon">seconds</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <legend>Dialing landline and mobile numbers</legend>
-                                        <div class="form-group">
-                                            <label class="col-lg-3 control-label">Replace preceding + with</label>
-                                            <div class="col-lg-3">
-                                                <input type="text" class="form-control" name='idd_prefix'>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-lg-3 control-label">External line prefix</label>
-                                            <div class="col-lg-3">
-                                                <input type="text" class="form-control" name='prefix'>
-                                            </div>
-                                        </div>
+                                        </fieldset>
 
                                    <!--
                                         <legend>TLS Settings</legend>
@@ -387,39 +400,40 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <form class="form-horizontal" id="audio_devices_form" role="form">
-                                <legend>Audio Devices</legend>
-                                <div class="form-group">
-                                    <label for="input_device" class="col-lg-3 control-label">Input Device</label>
-                                    <div class="col-lg-9">
-                                        <select class='selectpicker' data-width="auto" name="input_device">
-                                        </select>
+                                <fieldset>
+                                    <legend>Audio Devices</legend>
+                                    <div class="form-group">
+                                        <label for="input_device" class="col-lg-3 control-label">Input Device</label>
+                                        <div class="col-lg-9">
+                                            <select class='selectpicker' data-width="auto" id="input_device" name="input_device">
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="output_device" class="col-lg-3 control-label">Output Device</label>
-                                    <div class="col-lg-9">
-                                        <select class='selectpicker' data-width="auto" name="output_device">
-                                        </select>
+                                    <div class="form-group">
+                                        <label for="output_device" class="col-lg-3 control-label">Output Device</label>
+                                        <div class="col-lg-9">
+                                            <select class='selectpicker' data-width="auto" id="output_device" name="output_device">
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="alert_device" class="col-lg-3 control-label">Alert Device</label>
-                                    <div class="col-lg-9">
-                                        <select class='selectpicker' data-width="auto" name="alert_device">
+                                    <div class="form-group">
+                                        <label for="alert_device" class="col-lg-3 control-label">Alert Device</label>
+                                        <div class="col-lg-9">
+                                            <select class='selectpicker' data-width="auto" id="alert_device" name="alert_device">
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-<!--
-                                <div class="form-group">
-                                    <label for="samplerate" class="col-lg-3 control-label">Sample Rate</label>
-                                    <div class="col-lg-9">
-                                        <select class='selectpicker' data-width="auto" name="samplerate">
-                                        </select>
+    <!--
+                                    <div class="form-group">
+                                        <label for="samplerate" class="col-lg-3 control-label">Sample Rate</label>
+                                        <div class="col-lg-9">
+                                            <select class='selectpicker' data-width="auto" name="samplerate">
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
 -->
-
+                                 </fieldset>
                             </form>
                         </div>
                     </div>
@@ -434,35 +448,35 @@
                             <form class="form-horizontal" id="speed_dialing_form" role="form">
 
                                         <div class="form-group">
-                                            <label for="input_device" class="col-lg-1 control-label">Name</label>
+                                            <label for="name_1" class="col-lg-1 control-label">Name</label>
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control" name='name_1'>
+                                                <input type="text" class="form-control" id ='name_1' name='name_1'>
                                             </div>
-                                            <label for="input_device" class="col-lg-1 control-label">URI</label>
+                                            <label for="uri_1" class="col-lg-1 control-label">URI</label>
                                             <div class="col-lg-7">
-                                                <input type="text" class="form-control" name='uri_1'>
+                                                <input type="text" class="form-control" id='uri_1' name='uri_1'>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="input_device" class="col-lg-1 control-label">Name</label>
+                                            <label for="name_2" class="col-lg-1 control-label">Name</label>
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control" name='name_2'>
+                                                <input type="text" class="form-control" id='name_2' name='name_2'>
                                             </div>
-                                            <label for="input_device" class="col-lg-1 control-label">URI</label>
+                                            <label for="uri_2" class="col-lg-1 control-label">URI</label>
                                             <div class="col-lg-7">
-                                                <input type="text" class="form-control" name='uri_2'>
+                                                <input type="text" class="form-control" id='uri_2' name='uri_2'>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="input_device" class="col-lg-1 control-label">Name</label>
+                                            <label for="name_3" class="col-lg-1 control-label">Name</label>
                                             <div class="col-lg-3">
-                                                <input type="text" class="form-control" name='name_3'>
+                                                <input type="text" class="form-control" id='name_3' name='name_3'>
                                             </div>
-                                            <label for="input_device" class="col-lg-1 control-label">URI</label>
+                                            <label for="uri_3" class="col-lg-1 control-label">URI</label>
                                             <div class="col-lg-7">
-                                                <input type="text" class="form-control" name='uri_3'>
+                                                <input type="text" class="form-control" id ='uri_3' name='uri_3'>
                                             </div>
                                         </div>
 
@@ -491,7 +505,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -528,17 +542,14 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-<!--     <div id="footer">
-        <div class="container">
-            <p class="muted credit">The OP<sup>2</sup> Project, courtesy of <a href="http://twitter.com/saghul">Saúl</a> and <a href="http://twitter.com/tijmenNL">Tijmen</a>.</p>
-        </div>
-    </div> -->
-
 
     <!-- JS and analytics only. -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <!-- JQuery -->
     <script src="/assets/js/jquery-2.0.3.min.js"></script>
     <script src="/assets/js/jquery-migrate-1.2.1.js"></script>
+
+    <!-- JQuery UI-->
     <script src="/assets/js/jquery-ui-1.8.23.custom.min.js"></script>
 
     <script src="/assets/js/bootstrap.min.js"></script>
