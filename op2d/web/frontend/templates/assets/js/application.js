@@ -487,7 +487,8 @@ function populateAccountForms(frm, account_id, data) {
             key === 'auth' ||
             key === 'msrp' ||
             key === 'pstn' ||
-            key === 'message_summary' ) {
+            key === 'message_summary' ||
+            key === 'xcap') {
             if (key !== 'display_name' && key !== 'enabled') {
                 $.each(value, function(key1,value2) {
                     updateField(value,value2,key,key1,account_id);
