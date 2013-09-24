@@ -190,6 +190,9 @@ ol#audio_codecs li, ol#audio_codecs_general li {
     display:none;
 }
 
+#account_buttons {
+  padding-top:10px;
+}
 .selected {
     font-weight: bold;
 }
