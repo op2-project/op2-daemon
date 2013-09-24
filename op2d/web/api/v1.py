@@ -190,9 +190,9 @@ def audio_codecs():
 @app.route('/system/audio_devices')
 def audio_devices():
     engine = Engine()
-    devices = {'input': None, 'output': None}
-    devices['input'] = engine.input_devices
-    devices['output'] = engine.output_devices
+    devices = {'input': ['system_default', None], 'output': ['system_default', None]}
+    devices['input'].extend(engine.input_devices)
+    devices['output'].extend(engine.output_devices)
     return json.jsonify({'devices': devices})
 
 
