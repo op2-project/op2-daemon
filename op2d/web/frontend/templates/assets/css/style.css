@@ -20,6 +20,11 @@ body {
     padding: 0 0 60px;
 }
 
+.alertify-logs {
+    top: 60px;
+    right: 10px;
+}
+
 /* Set the fixed height of the footer here */
 #footer {
     height: 40px;
