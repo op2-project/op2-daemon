@@ -678,6 +678,36 @@ $(document).ready(function() {
         });
     });
 
+    $('button[id^="call_"]').click(function(event){
+
+        console.log("call");
+        var account = getAccountId();
+        event.preventDefault();
+        var that = this ;
+        var id_number = this.id.replace(/^[^\d]+/, "");
+        //$(that).button('loading').addClass('btn-info');
+        //var data = "{\"from\":\""+account+"\", \"to\": \""+ $('#uri_1').val() + "\"}";
+        var data = "from="+account+"&to="+ $('#uri_'+id_number).val();
+        console.log(data);
+        $.ajax({
+            type: "get",
+            url: "/api/v1/sessions/dial?"+data,
+            data: data,
+            success: function(){
+                //getAccounts('account_list','account_info_form', 0);
+                timeout = setTimeout(function() {
+                    $(that).button('reset').removeClass('btn-info');
+                },500);
+
+            },
+            error: function(rdata){
+                console.log(rdata);
+                console.log("Error");
+                notifyError(rdata);
+            }
+        });
+    });
+
     $("ol#audio_codecs").sortable({
         change: function( event, ui ) {
             $("#reset_audio_codecs").removeClass("btn-disabled").removeAttr("disabled");
