@@ -619,15 +619,49 @@ function populateSpeedDial() {
     });
 }
 
+function populateAudioDevices() {
+    $("#input_device").empty();
+    $("#output_device").empty();
+    $("#alert_device").empty();
+
+    $.getJSON('api/v1/system/audio_devices', function(data) {
+        $.each(data.devices, function(key,value2) {
+            $.each(value2, function(index,value){
+                if (!value) {
+                    value='None';
+                }
+                if (key === 'input') {
+                    $('#input_device').append("<option value=\""+value + "\">"+value+"</option>");
+                    $('#input_device').unbind('change.myEvents');
+                    $('#input_device').selectpicker('refresh');
+                } else if (key === 'output') {
+                    $('#output_device').append("<option value=\""+value + "\">"+value+"</option>");
+                    $('#output_device').unbind('change.myEvents');
+                    $('#output_device').selectpicker('refresh');
+                    $('#alert_device').append("<option value=\""+value + "\">"+value+"</option>");
+                    $('#alert_device').unbind('change.myEvents');
+                    $('#alert_device').selectpicker('refresh');
+                }
+                console.log(value);
+            });
+        });
+        $.each(settings.audio, function(key,value){
+            if (!value) {
+                value='None';
+            }
+            updateAudioSettings(value,'','audio',key);
+            //updateSpeedDial(count, value[1],"uri");
+        });
+    });
+}
+
 $(document).ready(function() {
     getSettings();
 
     $('select').selectpicker();
 
     $('#reregister').click(function(event){
-        var account = $('.selected').clone();
-        account.find("i").remove();
-        account = account.html();
+        var account = getAccountId();
         event.preventDefault();
         var that = this ;
         $(that).button('loading').addClass('btn-info');
