@@ -225,6 +225,7 @@ function getSettings() {
         settings = data;
         getAccounts('account_list','account_info_form');
         populateSpeedDial();
+        populateAudioDevices();
         //setDefaultAccount();
     });
     $.getJSON('api/v1/system/audio_codecs', function(data) {
@@ -571,6 +572,39 @@ function updateSpeedDial(count, name,field) {
         });
 }
 
+function updateAudioSettings(value,value2,key,key2) {
+    $("select[name="+key2+"]").unbind('change.myEvents');
+
+    $("select[name="+key2+"]").selectpicker('val',value).bind('change.myEvents', function() {
+        data = "{\""+key+"\": " + JSON.stringify($(this).serializeObject())+"}";
+
+        console.log(data);
+        var that = this;
+        $.ajax({
+            type: "PUT",
+            url: "api/v1/settings",
+            data: data,
+            dataType:"json",
+            contentType: 'application/json',
+            success: function(){
+                $("select[name="+key2+"]").parent('div').find('button').addClass("btn-success").blur();
+                $("select[name="+key2+"]").parent().parent().addClass('has-success');
+                console.log("Updated " + key +":"+ key2);
+                timeout = setTimeout(function() {
+                    $("select[name="+key2+"]").parent('div').find('button').removeClass("btn-success");
+                    $("select[name="+key2+"]").parent().parent().removeClass('has-success');
+                },2500);
+                getSettings();
+                //getAccounts('account_list','account_info_form', 0);
+            },
+            error: function(rdata){
+                console.log("Error");
+                notifyError(rdata);
+            }
+        });
+    });
+}
+
 function populateSpeedDial() {
     var count = 0;
     for (var i=1;i<4;i++) {
@@ -665,6 +699,7 @@ $(document).ready(function() {
             $('.navbar-nav li').removeClass('active');
         } else if ( $(e.target).attr('href') == "#audio_tab" ) {
             //populateAudioCodecs();
+            populateAudioDevices();
         }
         //e.relatedTarget // previous tab
     });
