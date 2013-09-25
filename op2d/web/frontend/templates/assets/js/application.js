@@ -681,7 +681,7 @@ $(document).ready(function() {
     $('button[id^="call_"]').click(function(event){
 
         console.log("call");
-        var account = getAccountId();
+        var account = $('[name="nav_account_list"]').val();
         event.preventDefault();
         var that = this ;
         var id_number = this.id.replace(/^[^\d]+/, "");
