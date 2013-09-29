@@ -1,10 +1,14 @@
 
 import re
 
-from flask import json
+try:
+    from flask.json import jsonify
+except ImportError:
+    from flask.helpers import jsonify
+
 from sipsimple.configuration import DefaultValue
 
-__all__ = ['error_response', 'get_state', 'set_state']
+__all__ = ['error_response', 'get_json', 'get_state', 'jsonify', 'set_state']
 
 
 class SettingsParser(object):
@@ -89,5 +93,15 @@ def set_state(obj, state):
 
 
 def error_response(code, reason='unkwnown'):
-    return json.jsonify({'msg': reason}), code
+    return jsonify({'msg': reason}), code
+
+
+def get_json(request):
+    try:
+        return request.get_json(silent=True)
+    except AttributeError:
+        try:
+            return request.json
+        except Exception:
+            return None
 

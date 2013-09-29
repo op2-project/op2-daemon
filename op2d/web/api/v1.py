@@ -2,7 +2,7 @@
 import platform
 
 from application import log
-from flask import Flask, json, request
+from flask import Flask, request
 from sipsimple.account import Account, BonjourAccount, AccountManager
 from sipsimple.configuration import DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
@@ -10,16 +10,11 @@ from sipsimple.core import Engine
 from sipsimple.streams import AudioStream
 from werkzeug.routing import BaseConverter
 
-try:
-    from flask.json import jsonify
-except ImportError:
-    from flask.helpers import jsonify
-
 import op2d
 
 from op2d.accounts import AccountModel
 from op2d.sessions import SessionManager
-from op2d.web.api.utils import error_response, get_state, set_state
+from op2d.web.api.utils import error_response, get_state, get_json, jsonify, set_state
 
 __all__ = ['app']
 
@@ -62,7 +57,7 @@ def handle_accounts():
         return jsonify({'accounts': accs})
     elif request.method == 'POST':
         # Create account
-        state = request.get_json(silent=True)
+        state = get_json(request)
         if not state:
             return error_response(400, 'error processing POST body')
         account_id = state.pop('id', None)
@@ -100,7 +95,7 @@ def handle_account(account_id):
         return jsonify({'account': state})
     elif request.method == 'PUT':
         # Update existing account
-        state = request.get_json(silent=True)
+        state = get_json(request)
         if not state:
             return error_response(400, 'error processing PUT body')
         state.pop('id', None)
@@ -162,7 +157,7 @@ def handle_settings():
         return jsonify(get_state(settings))
     else:
         # Update settings
-        state = request.get_json(silent=True)
+        state = get_json(request)
         if not state:
             return error_response(400, 'error processing PUT body')
         try:
