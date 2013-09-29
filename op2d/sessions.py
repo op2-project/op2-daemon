@@ -631,6 +631,7 @@ class SessionManager(object):
         incoming_proposal = IncomingRequest()
         notification.center.add_observer(self, sender=incoming_proposal)
         incoming_proposal.initialize(session, streams, new_session=True)
+        self._incoming_proposals.append(incoming_proposal)
         self.update_ringtone()
 
     def _NH_SIPSessionGotProposal(self, notification):
@@ -664,6 +665,7 @@ class SessionManager(object):
         incoming_proposal = IncomingRequest()
         notification.center.add_observer(self, sender=incoming_proposal)
         incoming_proposal.initialize(session, streams, new_session=False)
+        self._incoming_proposals.append(incoming_proposal)
         self.update_ringtone()
 
     def _NH_SIPSessionDidFail(self, notification):
@@ -698,10 +700,6 @@ class SessionManager(object):
             self.active_session = None
 
     # IncomingRequest notifications
-
-    def _NH_IncomingRequestReceived(self, notification):
-        incoming_proposal = notification.sender
-        self._incoming_proposals.append(incoming_proposal)
 
     def _NH_IncomingRequestAccepted(self, notification):
         incoming_proposal = notification.sender
