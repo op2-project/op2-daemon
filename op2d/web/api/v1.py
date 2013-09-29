@@ -19,7 +19,7 @@ from op2d.web.api.utils import error_response, get_state, set_state
 __all__ = ['app']
 
 
-app = Flask('api_v1')
+app = Flask(__name__)
 
 
 class SipUriConverter(BaseConverter):

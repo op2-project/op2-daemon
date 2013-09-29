@@ -8,7 +8,7 @@ __all__ = ['app']
 
 
 # Empty app to  use with DispatcherMiddleware
-_app = Flask('api')
+_app = Flask(__name__)
 
 @_app.route('/')
 def index():
