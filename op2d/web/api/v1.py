@@ -10,6 +10,11 @@ from sipsimple.core import Engine
 from sipsimple.streams import AudioStream
 from werkzeug.routing import BaseConverter
 
+try:
+    from flask.json import jsonify
+except ImportError:
+    from flask.helpers import jsonify
+
 import op2d
 
 from op2d.accounts import AccountModel
@@ -31,13 +36,13 @@ app.url_map.converters['sip'] = SipUriConverter
 
 @app.errorhandler(404)
 def not_found(error):
-    return json.jsonify({'msg': 'resource not found'}), 404
+    return jsonify({'msg': 'resource not found'}), 404
 
 
 @app.route('/')
 def index():
     message = 'OP2d version %s APIv1' % op2d.__version__
-    return json.jsonify({'message': message})
+    return jsonify({'message': message})
 
 
 # Account management
@@ -54,7 +59,7 @@ def handle_accounts():
             if 'auth' in state:
                 state['auth']['password'] = '****'
             accs.append(state)
-        return json.jsonify({'accounts': accs})
+        return jsonify({'accounts': accs})
     elif request.method == 'POST':
         # Create account
         state = request.get_json(silent=True)
@@ -77,7 +82,7 @@ def handle_accounts():
         state = get_state(account)
         if 'auth' in state:
             state['auth']['password'] = '****'
-        return json.jsonify({'account': state}), 201
+        return jsonify({'account': state}), 201
 
 
 @app.route('/accounts/<sip:account_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -92,7 +97,7 @@ def handle_account(account_id):
         state = get_state(account)
         if 'auth' in state:
             state['auth']['password'] = '****'
-        return json.jsonify({'account': state})
+        return jsonify({'account': state})
     elif request.method == 'PUT':
         # Update existing account
         state = request.get_json(silent=True)
@@ -108,7 +113,7 @@ def handle_account(account_id):
         state = get_state(account)
         if 'auth' in state:
             state['auth']['password'] = '****'
-        return json.jsonify({'account': state})
+        return jsonify({'account': state})
     elif request.method == 'DELETE':
         try:
             account.delete()
@@ -144,7 +149,7 @@ def account_info(account_id):
     else:
         registration['state'] = 'unknown'
         registration['registrar'] = None
-    return json.jsonify({'info': {'registration': registration}})
+    return jsonify({'info': {'registration': registration}})
 
 
 # General settings management
@@ -154,7 +159,7 @@ def handle_settings():
     settings = SIPSimpleSettings()
     if request.method == 'GET':
         # Retrieve settings
-        return json.jsonify(get_state(settings))
+        return jsonify(get_state(settings))
     else:
         # Update settings
         state = request.get_json(silent=True)
@@ -166,7 +171,7 @@ def handle_settings():
             # TODO: some settings may have been applied, what do we do?
             return error_response(400, str(e))
         settings.save()
-        return json.jsonify(get_state(settings))
+        return jsonify(get_state(settings))
 
 
 # System information
@@ -178,13 +183,13 @@ def system_info():
     info['network_name'] = platform.node()
     info['python_version'] = platform.python_version()
     info['platform'] = platform.platform()
-    return json.jsonify({'info': info})
+    return jsonify({'info': info})
 
 
 @app.route('/system/audio_codecs')
 def audio_codecs():
     engine = Engine()
-    return json.jsonify({'audio_codecs': engine.available_codecs})
+    return jsonify({'audio_codecs': engine.available_codecs})
 
 
 @app.route('/system/audio_devices')
@@ -193,7 +198,7 @@ def audio_devices():
     devices = {'input': ['system_default', None], 'output': ['system_default', None]}
     devices['input'].extend(engine.input_devices)
     devices['output'].extend(engine.output_devices)
-    return json.jsonify({'devices': devices})
+    return jsonify({'devices': devices})
 
 
 # Sessions
