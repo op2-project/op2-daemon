@@ -196,6 +196,16 @@ def audio_devices():
     return jsonify({'devices': devices})
 
 
+@app.route('/system/refresh_audio_devices')
+def refresh_audio_devices():
+    engine = Engine()
+    engine.refresh_sound_devices()
+    devices = {'input': ['system_default', None], 'output': ['system_default', None]}
+    devices['input'].extend(engine.input_devices)
+    devices['output'].extend(engine.output_devices)
+    return jsonify({'devices': devices})
+
+
 # Sessions
 
 @app.route('/sessions/dial')
