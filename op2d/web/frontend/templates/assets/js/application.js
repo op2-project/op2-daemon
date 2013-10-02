@@ -533,13 +533,13 @@ function updateSpeedDial(count, name,field) {
     $("input[name="+field+"_" +count + "]").val(name).unbind('change').bind('change', function(e) {
             var that = this;
 
-            if ($("input[name=name_" +count + "]").val() !=='' && $("input[name=uri_" +count + "]").val() !== '') {
+            //if ($("input[name=name_" +count + "]").val() !=='' && $("input[name=uri_" +count + "]").val() !== '') {
                 data = "{\"op2\":{ \"speed_dialing\": ";
                 data1 = [];
                 for (var i=1;i<4;i++) {
-                    if ($("input[name=name_" +i + "]").val() !=='' && $("input[name=uri_" +i + "]").val() !== '') {
+                    //if ($("input[name=name_" +i + "]").val() !=='' && $("input[name=uri_" +i + "]").val() !== '') {
                         data1.push($("input[name=name_" + i + "]").val() +"|" + $("input[name=uri_" + i + "]").val());
-                    }
+                    //}
                 }
                 data = data + JSON.stringify(data1) + '}}' ;
                 //console.log(data);
@@ -565,7 +565,7 @@ function updateSpeedDial(count, name,field) {
                         //return false;
                     }
                 });
-            }
+            //}
         }).unbind('focus').bind('focus', function() {
             $(this).closest('.form-group').removeClass('has-error');
             $(this).closest('.form-group').removeClass('has-success');
@@ -781,7 +781,11 @@ $(document).ready(function() {
                 timeout = setTimeout(function() {
                     $(that).button('reset').removeClass('btn-info');
                 },400);
-
+            },
+            error: function(rdata){
+                console.log("Error");
+                notifyError(rdata);
+                return false;
             }
         });
     });
