@@ -34,6 +34,11 @@ def not_found(error):
     return jsonify({'msg': 'resource not found'}), 404
 
 
+@app.errorhandler(500)
+def server_error(error):
+    return jsonify({'msg': 'internal server error'}), 500
+
+
 @app.route('/')
 def index():
     message = 'OP2d version %s APIv1' % op2d.__version__
