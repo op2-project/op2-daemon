@@ -711,11 +711,39 @@ $(document).ready(function() {
             url: "/api/v1/sessions/dial?"+data,
             data: data,
             success: function(){
+                alertify.success("Call placed");
                 //getAccounts('account_list','account_info_form', 0);
-                timeout = setTimeout(function() {
-                    $(that).button('reset').removeClass('btn-info');
-                },500);
+                // timeout = setTimeout(function() {
+                //     $(that).button('reset').removeClass('btn-info');
+                // },500);
 
+            },
+            error: function(rdata){
+                console.log(rdata);
+                console.log("Error");
+                notifyError(rdata);
+            }
+        });
+    });
+
+    $('button[id^="general_call"]').click(function(event){
+
+        console.log("Call form nav");
+        var account = $('[name="nav_account_list"]').val();
+        event.preventDefault();
+        var that = this ;
+        //var id_number = $('#sip_address').i.replace(/^[^\d]+/, "");
+        //$(that).button('loading').addClass('btn-info');
+        //var data = "{\"from\":\""+account+"\", \"to\": \""+ $('#uri_1').val() + "\"}";
+        var data = "from="+account+"&to="+ $('#sip_address').val();
+        console.log(data);
+        $.ajax({
+            type: "get",
+            url: "/api/v1/sessions/dial?"+data,
+            data: data,
+            success: function(){
+                alertify.success("Call placed");
+                //getAccounts('account_list','account_info_form', 0);
             },
             error: function(rdata){
                 console.log(rdata);
