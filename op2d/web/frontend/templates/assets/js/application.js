@@ -511,7 +511,9 @@ function populateAccountForms(frm, account_id, data) {
             key === 'xcap') {
             if (key !== 'display_name' && key !== 'enabled') {
                 $.each(value, function(key1,value2) {
-                    updateField(value,value2,key,key1,account_id);
+                    if (key !== 'xcap' && key1 !== 'enabled') {
+                        updateField(value,value2,key,key1,account_id);
+                    }
                 });
             } else {
                 updateField(value,'',key,'',account_id);
