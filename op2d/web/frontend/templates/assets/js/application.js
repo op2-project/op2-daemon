@@ -768,6 +768,24 @@ $(document).ready(function() {
         //e.relatedTarget // previous tab
     });
 
+    $('#refresh').click(function(event){
+        var account = getAccountId();
+        event.preventDefault();
+        var that = this ;
+        $(that).button('loading').addClass('btn-info');
+        $.ajax({
+            type: "GET",
+            url: "api/v1/system/refresh_audio_devices",
+            success: function(){
+                populateAudioDevices();
+                timeout = setTimeout(function() {
+                    $(that).button('reset').removeClass('btn-info');
+                },400);
+
+            }
+        });
+    });
+
      $('#account_add_form').on('submit', function(event){
         event.preventDefault();
         var display_name = $(this).find("input[name='display_name1']").val();
