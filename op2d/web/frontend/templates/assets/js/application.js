@@ -630,15 +630,22 @@ function populateAudioDevices() {
                 if (!value) {
                     value='None';
                 }
+                var text='';
+                if (value == "system_default") {
+                    text='System Default';
+                } else {
+                    text=value;
+                }
+
                 if (key === 'input') {
-                    $('#input_device').append("<option value=\""+value + "\">"+value+"</option>");
+                    $('#input_device').append("<option value=\""+value + "\">"+text+"</option>");
                     $('#input_device').unbind('change.myEvents');
                     $('#input_device').selectpicker('refresh');
                 } else if (key === 'output') {
-                    $('#output_device').append("<option value=\""+value + "\">"+value+"</option>");
+                    $('#output_device').append("<option value=\""+value + "\">"+text+"</option>");
                     $('#output_device').unbind('change.myEvents');
                     $('#output_device').selectpicker('refresh');
-                    $('#alert_device').append("<option value=\""+value + "\">"+value+"</option>");
+                    $('#alert_device').append("<option value=\""+value + "\">"+text+"</option>");
                     $('#alert_device').unbind('change.myEvents');
                     $('#alert_device').selectpicker('refresh');
                 }
