@@ -145,7 +145,7 @@ function setDefaultAccount() {
                 timeout = setTimeout(function() {
                     $(that).parent().find('.bootstrap-select > button').removeClass("btn-success");
                     //$("[name=nav_account_list]").parent().parent().removeClass('has-success');
-                },2500);
+                },1000);
                 $("[name=nav_account_list]").unbind('change.myEvents');
                 getSettings();
             },
@@ -252,7 +252,7 @@ function saveListClick(field,account) {
             getAccounts('account_list','account_info_form', 0);
             timeout = setTimeout(function() {
                 $(field).closest('ol').removeClass('success');
-            },2500);
+            },1000);
         },
         error: function(rdata){
             // $(that).closest('.form-group').addClass("has-error");
@@ -388,7 +388,7 @@ function updateField(value,value2,key,key1,account_id) {
                 timeout = setTimeout(function() {
                     $("select[name="+key2+"]").parent('div').find('button').removeClass("btn-success");
                     $("select[name="+key2+"]").parent().parent().removeClass('has-success');
-                },2500);
+                },1000);
                 getAccounts('account_list','account_info_form', 0);
             },
             error: function(rdata){
@@ -553,7 +553,7 @@ function updateSpeedDial(count, name,field) {
                         $('#speed_dialing_form div').addClass('has-success');
                         timeout = setTimeout(function() {
                             $('#speed_dialing_form div').removeClass('has-success');
-                        },2500);
+                        },1000);
                         getSettings();
                         console.log("Updated speed dialing" + data );
                     },
