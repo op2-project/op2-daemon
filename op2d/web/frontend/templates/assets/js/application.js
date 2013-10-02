@@ -105,7 +105,8 @@ function removeAccount() {
 
     event.preventDefault();
 }
-function populateRegistration(index, value) {
+
+function populateRegistration(index, value,reg_counter) {
     var el = $('#account_'+index).find("i");
     el.remove();
 
@@ -118,9 +119,16 @@ function populateRegistration(index, value) {
             $('#account_'+index).append("<i class='pull-right icon-circle'></i>");
         } else {
             $('#account_'+index).append("<i class='pull-right icon-circle text-warning'></i>");
-            timeout = setTimeout(function() {
-                populateRegistration(index, value);
-            },500);
+            console.log("test "+ reg_counter);
+            if (reg_counter !== 1) {
+                timeout = setTimeout(function() {
+                    reg_counter=1;
+                    populateRegistration(index, value, reg_counter);
+                },1000);
+            } else {
+                console.log("here");
+                reg_counter=0;
+            }
         }
     });
 }
