@@ -813,6 +813,8 @@ $(document).ready(function() {
         //e.relatedTarget // previous tab
     });
 
+    // Refresh Audio devices
+
     $('#refresh').click(function(event){
         var account = getAccountId();
         event.preventDefault();
@@ -829,7 +831,11 @@ $(document).ready(function() {
             },
             error: function(rdata){
                 console.log("Error");
+                $(that).removeClass('btn-info').addClass('btn-danger');
                 notifyError(rdata);
+                timeout = setTimeout(function() {
+                    $(that).button('reset').removeClass('btn-danger');
+                },1000);
                 return false;
             }
         });
