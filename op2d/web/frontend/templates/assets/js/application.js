@@ -753,6 +753,37 @@ $(document).ready(function() {
         });
     });
 
+    $('#sip_address').keypress(function(event) {
+        if (event.keyCode == 13) {
+            console.log("Call form nav");
+            var account = $('[name="nav_account_list"]').val();
+            event.preventDefault();
+            var that = this ;
+            //var id_number = $('#sip_address').i.replace(/^[^\d]+/, "");
+            //$(that).button('loading').addClass('btn-info');
+            //var data = "{\"from\":\""+account+"\", \"to\": \""+ $('#uri_1').val() + "\"}";
+            if ($('#sip_address').val() !== '') {
+                var data = "from="+account+"&to="+ $('#sip_address').val();
+                console.log(data);
+                $.ajax({
+                    type: "get",
+                    url: "/api/v1/sessions/dial?"+data,
+                    data: data,
+                    success: function(){
+                        alertify.success("Call placed");
+                        //getAccounts('account_list','account_info_form', 0);
+                    },
+                    error: function(rdata){
+                        console.log(rdata);
+                        console.log("Error");
+                        notifyError(rdata);
+                    }
+                });
+            }
+        }
+    });
+
+
     $("ol#audio_codecs").sortable({
         change: function( event, ui ) {
             $("#reset_audio_codecs").removeClass("btn-disabled").removeAttr("disabled");
