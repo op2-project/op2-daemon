@@ -1,5 +1,8 @@
 
 [op2d]
+; HAL backend (Python module name, will be imported and the 'backend' object
+; must be provided, look at falcon.py as an example)
+; hal_backend = falcon
 ; port where the admin website will be served
 ; web_port = 8088
 
