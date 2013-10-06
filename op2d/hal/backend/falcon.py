@@ -30,6 +30,9 @@ SD1_BTN    = 23
 SD2_BTN    = 22
 SD3_BTN    = 27   # 21 if using a rev1 board
 
+# Status LED (also uses the BCM pinout)
+STATUS_LED = 18
+
 # Use 200ms bounce time, seems to work fine
 
 BTN_BOUNCETIME = 200
@@ -69,6 +72,9 @@ class FalconBackend(object):
         GPIO.setup(SD2_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.setup(SD3_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+        # Status LED
+        GPIO.setup(STATUS_LED, GPIO.OUT)
+
     def start(self):
         log.msg('Falcon HAL backend started')
         notification_center = NotificationCenter()
@@ -87,6 +93,8 @@ class FalconBackend(object):
         GPIO.add_event_detect(SD1_BTN, GPIO.RISING, callback=self.handle_button_press, bouncetime=BTN_BOUNCETIME)
         GPIO.add_event_detect(SD2_BTN, GPIO.RISING, callback=self.handle_button_press, bouncetime=BTN_BOUNCETIME)
         GPIO.add_event_detect(SD3_BTN, GPIO.RISING, callback=self.handle_button_press, bouncetime=BTN_BOUNCETIME)
+
+        GPIO.output(STATUS_LED, 1)
 
     def stop(self):
         log.msg('Falcon HAL backend stopped')
