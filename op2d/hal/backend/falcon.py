@@ -169,13 +169,16 @@ class FalconBackend(object):
         speed_dialing = settings.op2.speed_dialing
         if not speed_dialing:
             return
-        if button == SD1_BTN:
-            entry = speed_dialing[0]
-        elif button == SD2_BTN:
-            entry = speed_dialing[1]
-        elif button == SD3_BTN:
-            entry = speed_dialing[2]
-        else:
+        try:
+            if button == SD1_BTN:
+                entry = speed_dialing[0]
+            elif button == SD2_BTN:
+                entry = speed_dialing[1]
+            elif button == SD3_BTN:
+                entry = speed_dialing[2]
+            else:
+                return
+        except IndexError:
             return
         if not entry.uri:
             return
