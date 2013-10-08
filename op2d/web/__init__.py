@@ -22,15 +22,3 @@ class WebHandler(object):
         if self._listener is not None:
             self._listener.stopListening()
 
-    @property
-    def api_url(self):
-        pass
-
-    @property
-    def configuration_url(self):
-        pass
-
-    @property
-    def event_url(self):
-        pass
-
