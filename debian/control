@@ -7,7 +7,7 @@ Standards-Version: 3.9.3
 
 Package: op2d
 Architecture: all
-Depends: ${python:Depends}, ${misc:Depends}, python-application (>= 1.4.0), python-eventlib, python-sipsimple (>= 1.0.0), python-twisted, python-twisted-web, python-flask, python-smbus, python-werkzeug, python-rpi.gpio
+Depends: ${python:Depends}, ${misc:Depends}, python-application (>= 1.4.0), python-eventlib, python-sipsimple (>= 1.0.0), python-twisted-core, python-twisted-web, python-flask, python-smbus, python-werkzeug, python-rpi.gpio
 Suggests: libavahi-compat-libdnssd1, avahi-server
 Description: Open Pi Phone project daemon.
 
