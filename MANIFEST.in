@@ -5,5 +5,5 @@ recursive-include debian/source format
 recursive-include resources/sounds *.wav
 prune debian/tmp
 prune debian/op2d
-include MANIFEST.in *.ini.sample
+include README.rst MANIFEST.in *.ini.sample
 recursive-include op2d/web/frontend/templates *
