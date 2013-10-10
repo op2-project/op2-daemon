@@ -1,3 +1,11 @@
+op2d (0.1.1) unstable; urgency=low
+
+  * Fixed Twisted dependency
+  * Fixed bogus PID file name
+  * Disabled speex codec
+
+ -- saghul <saghul@gmail.com>  Thu, 10 Oct 2013 12:42:39 +0000
+
 op2d (0.1.0) unstable; urgency=low
 
   * Initial release
