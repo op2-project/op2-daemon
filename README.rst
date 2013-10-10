@@ -33,6 +33,6 @@ Project OP^2 is licensed under the GPLv2.
 Authors
 -------
 
-Saúl Ibarra Corretgé - saghul@gmail.com
-Tijmen de Mes - t.w.k.demes@gmail.com
+* Saúl Ibarra Corretgé - saghul@gmail.com
+* Tijmen de Mes - t.w.k.demes@gmail.com
 
