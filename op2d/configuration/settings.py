@@ -49,7 +49,7 @@ class OP2Settings(SettingsGroup):
 
 
 class RTPSettingsExtension(RTPSettings):
-    audio_codec_list = Setting(type=AudioCodecList, default=AudioCodecList(('speex', 'G722', 'PCMU', 'PCMA')))
+    audio_codec_list = Setting(type=AudioCodecList, default=AudioCodecList(('G722', 'PCMU', 'PCMA')))
     timeout = Setting(type=NonNegativeInteger, default=0)
 
 
