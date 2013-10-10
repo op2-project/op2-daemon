@@ -18,7 +18,7 @@ def main():
     runtime_directory = '/var/run/op2d'
     spool_directory = '/var/spool/op2d'
     system_config_directory = '/etc/op2d'
-    default_pid = os.path.join(runtime_directory, 'pid')
+    default_pid = os.path.join(runtime_directory, 'server.pid')
     default_config = op2d.cfg_filename if os.path.isfile(op2d.cfg_filename) else os.path.join(system_config_directory, op2d.cfg_filename)
 
     parser = argparse.ArgumentParser()
