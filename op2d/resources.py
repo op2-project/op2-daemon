@@ -44,7 +44,7 @@ class Resources(object):
             if os.path.exists(os.path.join(application_directory, 'resources', '.op2d')):
                 cls._cached_directory = os.path.join(application_directory, 'resources').decode(sys.getfilesystemencoding())
             else:
-                cls._cached_directory = os.path.join(application_directory, 'share', 'op2-daemon').decode(sys.getfilesystemencoding())
+                cls._cached_directory = os.path.join(application_directory, 'share', 'op2d').decode(sys.getfilesystemencoding())
         return cls._cached_directory
 
     @classmethod
