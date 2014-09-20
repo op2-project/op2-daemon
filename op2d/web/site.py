@@ -7,6 +7,7 @@ from twisted.web.static import File
 from twisted.web.wsgi import WSGIResource
 from werkzeug.wsgi import DispatcherMiddleware
 
+from op2d.resources import Resources
 from op2d.web import api, frontend
 from op2d.web.utils import MySite, WSGIRootResource
 
@@ -27,7 +28,7 @@ def get_site():
     app_resource = WSGIResource(reactor, thread_pool, application)
 
     # resource for static assets
-    static_resource = File(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'frontend', 'templates', 'assets'))
+    static_resource = File(Resources.get('frontend/assets'))
 
     # root resource, aggregating the WSGI app and static assets
     root_resource = WSGIRootResource(app_resource, {'assets': static_resource})
