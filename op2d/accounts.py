@@ -2,7 +2,7 @@
 from application.notification import IObserver, NotificationCenter
 from application.python import Null
 from application.python.types import Singleton
-from sipsimple.account import BonjourAccount, AccountManager
+from sipsimple.account import Account, AccountManager
 from threading import RLock
 from zope.interface import implements
 
@@ -91,11 +91,11 @@ class AccountModel(object):
         except ValueError:
             return
         info.registration_state = 'succeeded'
-        if account is not BonjourAccount():
+        if isinstance(account, Account):
             route = notification.data.registrar
             info.registrar = '%s:%s:%d' % (route.transport, route.address, route.port)
         else:
-            info.registrar = None
+            info.registrar = '<bonjour>'
 
     def _NH_SIPAccountRegistrationDidFail(self, notification):
         account = notification.sender
