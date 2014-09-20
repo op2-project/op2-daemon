@@ -3,7 +3,7 @@ import platform
 import sys
 
 from sipsimple.configuration import Setting, SettingsGroup, SettingsObjectExtension
-from sipsimple.configuration.datatypes import AudioCodecList, NonNegativeInteger, SampleRate
+from sipsimple.configuration.datatypes import AudioCodecList, NonNegativeInteger, Path, SampleRate
 from sipsimple.configuration.settings import AudioSettings, EchoCancellerSettings, LogsSettings, RTPSettings, TLSSettings
 
 from op2d import __version__
@@ -43,7 +43,7 @@ class SoundSettings(SettingsGroup):
 
 
 class TLSSettingsExtension(TLSSettings):
-    ca_list = Setting(type=ApplicationDataPath, default=None, nillable=True)
+    ca_list = Setting(type=Path, default=Path(Resources.get('tls/ca.crt')), nillable=True)
 
 
 class SIPSimpleSettingsExtension(SettingsObjectExtension):

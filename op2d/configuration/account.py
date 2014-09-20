@@ -1,10 +1,11 @@
 
 from sipsimple.account import BonjourMSRPSettings, MessageSummarySettings, MSRPSettings, PresenceSettings, RTPSettings, SIPSettings, TLSSettings, XCAPSettings
 from sipsimple.configuration import Setting, SettingsGroup, SettingsObjectExtension
-from sipsimple.configuration.datatypes import AudioCodecList, MSRPConnectionModel, MSRPTransport, NonNegativeInteger, SIPTransportList, SRTPEncryption
+from sipsimple.configuration.datatypes import AudioCodecList, MSRPConnectionModel, MSRPTransport, NonNegativeInteger, Path, SIPTransportList, SRTPEncryption
 from sipsimple.util import user_info
 
 from op2d.configuration.datatypes import ApplicationDataPath, CustomSoundFile, DefaultPath
+from op2d.resources import Resources
 
 __all__ = ['AccountExtension', 'BonjourAccountExtension']
 
@@ -58,8 +59,7 @@ class SoundSettings(SettingsGroup):
 
 
 class TLSSettingsExtension(TLSSettings):
-    # TODO: bundle a certificate
-    certificate = Setting(type=ApplicationDataPath, default=None, nillable=True)
+    certificate = Setting(type=Path, default=Path(Resources.get('tls/default.crt')), nillable=True)
 
 
 class XCAPSettingsExtension(XCAPSettings):
