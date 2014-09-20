@@ -3,7 +3,7 @@ import platform
 import sys
 
 from sipsimple.configuration import Setting, SettingsGroup, SettingsObjectExtension
-from sipsimple.configuration.datatypes import AudioCodecList, NonNegativeInteger, Path, PJSIPLogLevel, SampleRate
+from sipsimple.configuration.datatypes import AudioCodecList, NonNegativeInteger, Path, SampleRate
 from sipsimple.configuration.settings import AudioSettings, ChatSettings, EchoCancellerSettings, FileTransferSettings, LogsSettings, RTPSettings, TLSSettings
 
 from op2d import __version__
@@ -36,12 +36,7 @@ class FileTransferSettingsExtension(FileTransferSettings):
 
 class LogsSettingsExtension(LogsSettings):
     directory = Setting(type=ApplicationDataPath, default=ApplicationDataPath('logs'))
-    trace_sip = Setting(type=bool, default=False)
-    trace_pjsip = Setting(type=bool, default=False)
-    trace_msrp = Setting(type=bool, default=False)
-    trace_xcap = Setting(type=bool, default=False)
     trace_notifications = Setting(type=bool, default=False)
-    pjsip_level = Setting(type=PJSIPLogLevel, default=0)
 
 
 class OP2Settings(SettingsGroup):
