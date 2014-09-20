@@ -17,11 +17,11 @@ def load_backend(backend_name):
         excs = []
         for mod in mods:
             try:
-                backend = import_module(backend_name)
+                backend = import_module(mod)
                 return backend.Backend()
             except Exception, e:
                 excs.append(e)
-        log.error('Failed to load HAL backend: %s' % '| '.join(str(e) for e in excs))
+        log.error('Failed to load HAL backend: %s' % ' | '.join(str(e) for e in excs))
     return Null
 
 
