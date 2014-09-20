@@ -63,27 +63,23 @@ def main():
         sys.exit(1)
 
     def stop_server(*args):
-        if not server.stopping:
+        if not server.stopping_event.is_set():
             log.msg('Stopping %s...' % fullname)
             server.stop()
-
-    def kill_server(*args):
-        log.msg('Killing %s...' % fullname)
-        os._exit(1)
 
     process.signals.add_handler(signal.SIGTERM, stop_server)
     process.signals.add_handler(signal.SIGINT, stop_server)
 
     try:
         server.start()
-        while True:
-            signal.pause()
-            if server.stopping:
-                break
-        process.signals.add_handler(signal.SIGALRM, kill_server)
-        signal.alarm(5)
+        while not server.stopping_event.wait(9999):
+            pass
         server.stop_event.wait(5)
-        log.msg("%s stopped" % fullname)
+        if server.stop_event.is_set():
+            log.msg("%s stopped" % fullname)
+        else:
+            log.msg("forcefully exiting %s..." % fullname)
+            os._exit(1)
     except Exception, e:
         log.fatal("failed to run %s" % fullname)
         log.err()
