@@ -3,8 +3,8 @@ import platform
 import sys
 
 from sipsimple.configuration import Setting, SettingsGroup, SettingsObjectExtension
-from sipsimple.configuration.datatypes import AudioCodecList, NonNegativeInteger, Path, SampleRate
-from sipsimple.configuration.settings import AudioSettings, ChatSettings, EchoCancellerSettings, FileTransferSettings, LogsSettings, RTPSettings, TLSSettings
+from sipsimple.configuration.datatypes import AudioCodecList, NonNegativeInteger, SampleRate
+from sipsimple.configuration.settings import AudioSettings, EchoCancellerSettings, LogsSettings, RTPSettings, TLSSettings
 
 from op2d import __version__
 from op2d.configuration.datatypes import ApplicationDataPath, SoundFile, SpeedDialingList
@@ -21,17 +21,6 @@ class AudioSettingsExtension(AudioSettings):
     recordings_directory = Setting(type=ApplicationDataPath, default=ApplicationDataPath('recordings'))
     sample_rate = Setting(type=SampleRate, default=16000)
     echo_canceller = EchoCancellerSettingsExtension
-
-
-class ChatSettingsExtension(ChatSettings):
-    auto_accept = Setting(type=bool, default=False)
-    sms_replication = Setting(type=bool, default=True)
-    history_directory = Setting(type=ApplicationDataPath, default=ApplicationDataPath('history'))
-
-
-class FileTransferSettingsExtension(FileTransferSettings):
-    auto_accept = Setting(type=bool, default=False)
-    directory = Setting(type=Path, default=None, nillable=True)
 
 
 class LogsSettingsExtension(LogsSettings):
@@ -51,12 +40,6 @@ class RTPSettingsExtension(RTPSettings):
 class SoundSettings(SettingsGroup):
     inbound_ringtone = Setting(type=SoundFile, default=SoundFile(Resources.get('sounds/inbound_ringtone.wav')), nillable=True)
     outbound_ringtone = Setting(type=SoundFile, default=SoundFile(Resources.get('sounds/outbound_ringtone.wav')), nillable=True)
-    message_received = Setting(type=SoundFile, default=SoundFile(Resources.get('sounds/message_received.wav')), nillable=True)
-    message_sent = Setting(type=SoundFile, default=SoundFile(Resources.get('sounds/message_sent.wav')), nillable=True)
-    file_received = Setting(type=SoundFile, default=SoundFile(Resources.get('sounds/file_received.wav')), nillable=True)
-    file_sent = Setting(type=SoundFile, default=SoundFile(Resources.get('sounds/file_sent.wav')), nillable=True)
-    play_message_alerts = Setting(type=bool, default=True)
-    play_file_alerts = Setting(type=bool, default=True)
 
 
 class TLSSettingsExtension(TLSSettings):
@@ -65,8 +48,6 @@ class TLSSettingsExtension(TLSSettings):
 
 class SIPSimpleSettingsExtension(SettingsObjectExtension):
     audio = AudioSettingsExtension
-    chat = ChatSettingsExtension
-    file_transfer = FileTransferSettingsExtension
     logs = LogsSettingsExtension
     op2 = OP2Settings
     rtp = RTPSettingsExtension
