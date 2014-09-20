@@ -226,7 +226,8 @@ def dial():
         except KeyError:
             return error_response(400, 'invalid account specified')
     try:
-        SessionManager().start_call(None, to, [AudioStream()], account=account)
+        session_manager = SessionManager()
+        session_manager.start_call(None, to, account=account)
     except Exception, e:
         log.error('Starting call to %s: %s' % (to, e))
         log.err()

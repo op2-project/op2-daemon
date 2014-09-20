@@ -10,6 +10,8 @@ from sipsimple.configuration.settings import SIPSimpleSettings
 from sipsimple.core import SIPURI, ToHeader
 from sipsimple.lookup import DNSLookup
 from sipsimple.session import Session
+from sipsimple.streams import AudioStream
+from sipsimple.threading import run_in_twisted_thread
 from threading import RLock
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
@@ -20,12 +22,7 @@ from op2d.resources import Resources
 
 __all__ = ['SessionManager']
 
-# TODO
-# - Support streams other than audio
-# - Add Ability to mute sessions
-# - Add ability to record sessions
-# - Separate statistics per stream type
-# - Need some sort of StreamHandler thing
+# TODO: refactor the sessions model, borrow the one from Blink Qt
 
 
 class IncomingRequest(object):
@@ -33,11 +30,10 @@ class IncomingRequest(object):
     def __init__(self):
         self.session = None
         self.streams = None
-        self.new_session = None
+        self.new_session = False
 
         self.accepted_streams = None
         self.reject_mode = None
-
 
     def initialize(self, session, streams, new_session=True):
         self.session = session
@@ -54,7 +50,7 @@ class IncomingRequest(object):
     @property
     def ringtone(self):
         if 'ringtone' not in self.__dict__:
-            if set(self.proposed_streams).intersection(['audio', 'video', 'desktop-sharing']):
+            if 'audio' in self.proposed_streams:
                 sound_file = self.session.account.sounds.inbound_ringtone
                 if sound_file is not None and sound_file.path is DefaultPath:
                     settings = SIPSimpleSettings()
@@ -67,21 +63,10 @@ class IncomingRequest(object):
             self.__dict__['ringtone'] = ringtone
         return self.__dict__['ringtone']
 
-    def accept(self, audio=False, video=False, chat=False, desktopsharing=False, filetransfer=False):
+    def accept(self):
         if self.accepted_streams is not None:
             return
-        streams = []
-        if audio:
-            streams.append(next(stream for stream in self.streams if stream.type=='audio'))
-        if video:
-            streams.append(next(stream for stream in self.streams if stream.type=='video'))
-        if chat:
-            streams.append(next(stream for stream in self.streams if stream.type=='chat'))
-        if desktopsharing:
-            streams.append(next(stream for stream in self.streams if stream.type=='desktop-sharing'))
-        if filetransfer:
-            streams.append(next(stream for stream in self.streams if stream.type=='file-transfer'))
-        self.accepted_streams = streams
+        self.accepted_streams = [next(stream for stream in self.streams if stream.type=='audio')]
         notification_center = NotificationCenter()
         notification_center.post_notification('IncomingRequestAccepted', sender=self)
 
@@ -166,10 +151,6 @@ class SessionItem(object):
     @property
     def audio_stream(self):
         return self.streams.get('audio', None)
-
-    @property
-    def video_stream(self):
-        return self.streams.get('video', None)
 
     @property
     def codec_info(self):
@@ -307,9 +288,6 @@ class SessionItem(object):
 
     def _set_codec_info(self):
         codecs = []
-        if self.video_stream is not None:
-            desc = 'HD Video' if self.video_stream.bit_rate/1024 >= 512 else 'Video'
-            codecs.append('[%s] %s %dkbit' % (desc, self.video_stream.codec, self.video_stream.bit_rate/1024))
         if self.audio_stream is not None:
             desc = 'HD Audio' if self.audio_stream.sample_rate/1000 >= 16 else 'Audio'
             codecs.append('[%s] %s %dkHz' % (desc, self.audio_stream.codec, self.audio_stream.sample_rate/1000))
@@ -324,6 +302,7 @@ class SessionItem(object):
         self._duration += timedelta(seconds=1)
         self.notification_center.post_notification('SessionItemDidChange', sender=self)
 
+    @run_in_twisted_thread
     def handle_notification(self, notification):
         handler = getattr(self, '_NH_%s' % notification.name, Null)
         handler(notification)
@@ -378,16 +357,13 @@ class SessionItem(object):
     def _NH_SIPSessionDidStart(self, notification):
         if self.audio_stream not in notification.data.streams:
             self._set_stream('audio', None)
-        if self.video_stream not in notification.data.streams:
-            self._set_stream('video', None)
-        # TODO: rework the above code
         if not self.local_hold:
             self.offer_in_progress = False
         if not self.pending_removal:
             self.timer.start(1)
             self._set_codec_info()
             self.status = u'Connected'
-            self._srtp = all(stream.srtp_active for stream in (self.audio_stream, self.video_stream) if stream is not None)
+            self._srtp = self.audio_stream is not None and self.audio_stream.srtp_active
             self._tls = self.session.transport == 'tls'
             reactor.callLater(1, self._reset_status)
         else:
@@ -427,58 +403,6 @@ class SessionItem(object):
             self.hold_tone.stop()
         self.offer_in_progress = False
 
-    def _NH_SIPSessionGotAcceptProposal(self, notification):
-        if self.audio_stream not in notification.data.proposed_streams and self.video_stream not in notification.data.proposed_streams:
-            return
-        if self.audio_stream in notification.data.proposed_streams and self.audio_stream not in notification.data.streams:
-            self._set_stream('audio', None)
-        if self.video_stream in notification.data.proposed_streams and self.video_stream not in notification.data.streams:
-            self._set_stream('video', None)
-        # TODO: rework the above
-        self.offer_in_progress = False
-        if not self.pending_removal:
-            self._set_codec_info()
-            self.status = u'Connected'
-            reactor.callLater(1, self._reset_status)
-        else:
-            self.status = u'Ending...'
-            self._cleanup()
-
-    def _NH_SIPSessionGotRejectProposal(self, notification):
-        if self.audio_stream not in notification.data.streams and self.video_stream not in notification.data.streams:
-            return
-        if self.audio_stream in notification.data.streams:
-            self._set_stream('audio', None)
-        if self.video_stream in notification.data.streams:
-            self._set_stream('video', None)
-        # TODO: rework the above
-        self.offer_in_progress = False
-        self.status = u'Stream refused'
-        if not self.pending_removal:
-            self._set_codec_info()
-            reactor.callLater(1, self._reset_status)
-        else:
-            self._cleanup()
-
-    def _NH_SIPSessionDidRenegotiateStreams(self, notification):
-        if notification.data.action != 'remove':
-            # TODO: what?
-            return
-        if self.audio_stream not in notification.data.streams and self.video_stream not in notification.data.streams:
-            return
-        if self.audio_stream in notification.data.streams:
-            self._set_stream('audio', None)
-        if self.video_stream in notification.data.streams:
-            self._set_stream('video', None)
-        # TODO: rework the above
-        self.offer_in_progress = False
-        self.status = u'Stream removed'
-        if not self.pending_removal:
-            self._set_codec_info()
-            reactor.callLater(1, self._reset_status)
-        else:
-            self._cleanup()
-
     def _NH_WavePlayerDidFail(self, notification):
         notification.center.remove_observer(self, sender=notification.sender)
 
@@ -516,17 +440,15 @@ class SessionManager(object):
     def start(self):
         notification_center = NotificationCenter()
         notification_center.add_observer(self, name='SIPSessionNewIncoming')
-        notification_center.add_observer(self, name='SIPSessionGotProposal')
+        notification_center.add_observer(self, name='SIPSessionNewProposal')
         notification_center.add_observer(self, name='SIPSessionDidFail')
-        notification_center.add_observer(self, name='SIPSessionGotRejectProposal')
         notification_center.add_observer(self, name='SIPSessionDidRenegotiateStreams')
 
     def stop(self):
         notification_center = NotificationCenter()
         notification_center.remove_observer(self, name='SIPSessionNewIncoming')
-        notification_center.remove_observer(self, name='SIPSessionGotProposal')
+        notification_center.remove_observer(self, name='SIPSessionNewProposal')
         notification_center.remove_observer(self, name='SIPSessionDidFail')
-        notification_center.remove_observer(self, name='SIPSessionGotRejectProposal')
         notification_center.remove_observer(self, name='SIPSessionDidRenegotiateStreams')
 
     def _get_active_session(self):
@@ -547,7 +469,7 @@ class SessionManager(object):
     def sessions(self):
         return [session for session in self._sessions if not session.pending_removal]
 
-    def start_call(self, name, address, streams, account=None):
+    def start_call(self, name, address, account=None):
         account_manager = AccountManager()
         account = account or account_manager.default_account
         if account is None or not account.enabled:
@@ -563,7 +485,7 @@ class SessionManager(object):
             notification_center = NotificationCenter()
             notification_center.add_observer(self, sender=session_item)
             self.active_session = session_item
-            session_item.init_outgoing(name, remote_uri, streams, account)
+            session_item.init_outgoing(name, remote_uri, [AudioStream()], account)
             session_item.connect()
 
     def update_ringtone(self):
@@ -603,83 +525,22 @@ class SessionManager(object):
     def _NH_SIPSessionNewIncoming(self, notification):
         session = notification.sender
         audio_streams = [stream for stream in notification.data.streams if stream.type=='audio']
-        video_streams = [stream for stream in notification.data.streams if stream.type=='video']
-        chat_streams = [stream for stream in notification.data.streams if stream.type=='chat']
-        desktopsharing_streams = [stream for stream in notification.data.streams if stream.type=='desktop-sharing']
-        filetransfer_streams = [stream for stream in notification.data.streams if stream.type=='file-transfer']
-        if not audio_streams and not video_streams and not chat_streams and not desktopsharing_streams and not filetransfer_streams:
-            session.reject(488)
-            return
-        if filetransfer_streams and (audio_streams or video_streams or chat_streams or desktopsharing_streams):
-            session.reject(488)
-            return
-        if video_streams and desktopsharing_streams:
+        if not audio_streams:
             session.reject(488)
             return
         session.send_ring_indication()
-        streams = []
-        if audio_streams:
-            streams.append(audio_streams[0])
-        if video_streams:
-            streams.append(video_streams[0])
-        if chat_streams:
-            streams.append(chat_streams[0])
-        if desktopsharing_streams:
-            streams.append(desktopsharing_streams[0])
-        if filetransfer_streams:
-            streams.append(filetransfer_streams[0])
         incoming_proposal = IncomingRequest()
         notification.center.add_observer(self, sender=incoming_proposal)
-        incoming_proposal.initialize(session, streams, new_session=True)
+        incoming_proposal.initialize(session, [audio_streams[0]], new_session=True)
         self._incoming_proposals.append(incoming_proposal)
         self.update_ringtone()
 
-    def _NH_SIPSessionGotProposal(self, notification):
-        session = notification.sender
-        audio_streams = [stream for stream in notification.data.streams if stream.type=='audio']
-        video_streams = [stream for stream in notification.data.streams if stream.type=='video']
-        chat_streams = [stream for stream in notification.data.streams if stream.type=='chat']
-        desktopsharing_streams = [stream for stream in notification.data.streams if stream.type=='desktop-sharing']
-        filetransfer_streams = [stream for stream in notification.data.streams if stream.type=='file-transfer']
-        if not audio_streams and not video_streams and not chat_streams and not desktopsharing_streams and not filetransfer_streams:
+    def _NH_SIPSessionNewProposal(self, notification):
+        if notification.data.originator == 'remote':
+            session = notification.sender
             session.reject_proposal(488)
-            return
-        if filetransfer_streams and (audio_streams or video_streams or chat_streams or desktopsharing_streams):
-            session.reject_proposal(488)
-            return
-        if video_streams and desktopsharing_streams:
-            session.reject_proposal(488)
-            return
-        session.send_ring_indication()
-        streams = []
-        if audio_streams:
-            streams.append(audio_streams[0])
-        if video_streams:
-            streams.append(video_streams[0])
-        if chat_streams:
-            streams.append(chat_streams[0])
-        if desktopsharing_streams:
-            streams.append(desktopsharing_streams[0])
-        if filetransfer_streams:
-            streams.append(filetransfer_streams[0])
-        incoming_proposal = IncomingRequest()
-        notification.center.add_observer(self, sender=incoming_proposal)
-        incoming_proposal.initialize(session, streams, new_session=False)
-        self._incoming_proposals.append(incoming_proposal)
-        self.update_ringtone()
 
     def _NH_SIPSessionDidFail(self, notification):
-        if notification.data.code != 487:
-            return
-        try:
-            incoming_session = next(incoming_session for incoming_session in self._incoming_proposals if incoming_session.session is notification.sender)
-        except StopIteration:
-            pass
-        else:
-            self._incoming_proposals.remove(incoming_session)
-            self.update_ringtone()
-
-    def _NH_SIPSessionGotRejectProposal(self, notification):
         if notification.data.code != 487:
             return
         try:
@@ -706,8 +567,6 @@ class SessionManager(object):
         self._incoming_proposals.remove(incoming_proposal)
         self.update_ringtone()
         session = incoming_proposal.session
-        #streams = incoming_proposal.accepted_streams.copy()
-        # TODO: enable other streams when support for them is implemented
         streams = [s for s in incoming_proposal.accepted_streams if s.type=='audio']
         if not streams:
             if incoming_proposal.new_session:

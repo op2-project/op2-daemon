@@ -141,7 +141,7 @@ class FalconBackend(object):
         if self.current_session is not None or self.incoming_request is None:
             return
         log.msg('Answering incoming request...')
-        self.incoming_request.accept(audio=True)
+        self.incoming_request.accept()
 
     def _EH_HangupButtonPressed(self):
         if self.incoming_request is not None:
@@ -183,7 +183,7 @@ class FalconBackend(object):
         if not entry.uri:
             return
         session_manager = SessionManager()
-        session_manager.start_call(entry.name, entry.uri, [AudioStream()])
+        session_manager.start_call(entry.name, entry.uri)
 
     @run_in_twisted_thread
     def handle_notification(self, notification):
