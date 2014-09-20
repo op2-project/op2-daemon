@@ -37,7 +37,7 @@ class BonjourServices(object):
     @run_in_green_thread
     def start(self):
         notification_center = NotificationCenter()
-        notification_center.add_observer(self, name='SystemIPAddressDidChange')
+        notification_center.add_observer(self, name='NetworkConditionsDidChange')
         notification_center.add_observer(self, name='SystemDidWakeUpFromSleep')
         self._select_proc = proc.spawn(self._process_files)
         proc.spawn(self._handle_commands)
@@ -47,7 +47,7 @@ class BonjourServices(object):
     def stop(self):
         self._deactivate()
         notification_center = NotificationCenter()
-        notification_center.remove_observer(self, name='SystemIPAddressDidChange')
+        notification_center.remove_observer(self, name='NetworkConditionsDidChange')
         notification_center.remove_observer(self, name='SystemDidWakeUpFromSleep')
         self._select_proc.kill()
         self._command_channel.send_exception(api.GreenletExit)
@@ -238,7 +238,7 @@ class BonjourServices(object):
         handler = getattr(self, '_NH_%s' % notification.name, Null)
         handler(notification)
 
-    def _NH_SystemIPAddressDidChange(self, notification):
+    def _NH_NetworkConditionsDidChange(self, notification):
         if self._files:
             self.restart_registration()
 
