@@ -40,7 +40,7 @@ class PSTNSettings(SettingsGroup):
 
 class RTPSettingsExtension(RTPSettings):
     audio_codec_order = Setting(type=AudioCodecList, default=None, nillable=True)
-    inband_dtmf = Setting(type=bool, default=True)
+    inband_dtmf = Setting(type=bool, default=False)
     srtp_encryption = Setting(type=SRTPEncryption, default='disabled')
     use_srtp_without_tls = Setting(type=bool, default=True)
 
