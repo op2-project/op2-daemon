@@ -47,7 +47,6 @@ class OP2Daemon(object):
         self.hal.start()
         self.session_manager.start()
         notification_center = NotificationCenter()
-        notification_center.add_observer(self)
         notification_center.add_observer(self, sender=self.application)
         self.application.start(FileStorage(ApplicationData.directory))
 
