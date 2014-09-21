@@ -2,7 +2,8 @@
 import platform
 
 from application import log
-from flask import Flask, request
+from application.system import unlink
+from flask import Flask, request, send_file
 from sipsimple.account import Account, BonjourAccount, AccountManager
 from sipsimple.configuration import DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
@@ -14,6 +15,7 @@ import op2d
 
 from op2d.accounts import AccountModel
 from op2d.history import HistoryManager
+from op2d.resources import ApplicationData
 from op2d.sessions import SessionManager
 from op2d.web.api.utils import error_response, get_state, get_json, jsonify, set_state
 
@@ -255,4 +257,21 @@ def history():
                             failure=None if not entry.failed else entry.reason,
                             text=entry.text))
     return jsonify({'history': entries})
+
+
+# Logs
+
+@app.route('/logs/<logfile>', methods=['GET', 'DELETE'])
+def logs(logfile):
+    if logfile not in ('sip', 'msrp', 'pjsip', 'notifications'):
+        return error_response(404, 'invalid log file')
+
+    if request.method == 'GET':
+        try:
+            return send_file(ApplicationData.get('logs/%s.log' % logfile))
+        except Exception as e:
+            return error_response(500, str(e))
+    elif request.method == 'DELETE':
+        unlink(ApplicationData.get('logs/%s.log' % logfile))
+        return ''
 
