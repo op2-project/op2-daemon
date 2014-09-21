@@ -81,6 +81,7 @@ class FalconBackend(object):
         notification_center.add_observer(self, name='IncomingRequestReceived')
         notification_center.add_observer(self, name='IncomingRequestAccepted')
         notification_center.add_observer(self, name='IncomingRequestRejected')
+        notification_center.add_observer(self, name='IncomingRequestCancelled')
         notification_center.add_observer(self, name='SessionItemNewIncoming')
         notification_center.add_observer(self, name='SessionItemNewOutgoing')
         notification_center.add_observer(self, name='SessionItemDidChange')
@@ -102,6 +103,7 @@ class FalconBackend(object):
         notification_center.remove_observer(self, name='IncomingRequestReceived')
         notification_center.remove_observer(self, name='IncomingRequestAccepted')
         notification_center.remove_observer(self, name='IncomingRequestRejected')
+        notification_center.remove_observer(self, name='IncomingRequestCancelled')
         notification_center.remove_observer(self, name='SessionItemNewIncoming')
         notification_center.remove_observer(self, name='SessionItemNewOutgoing')
         notification_center.remove_observer(self, name='SessionItemDidChange')
@@ -217,6 +219,15 @@ class FalconBackend(object):
             return
         log.msg('Incoming request rejected')
         self.lcd_output('Call rejected', delay=2)
+        self.lcd_output('')
+        self.incoming_request = None
+
+    def _NH_IncomingRequestCancelled(self, notification):
+        request = notification.sender
+        if request is not self.incoming_request:
+            return
+        log.msg('Incoming request cancelled')
+        self.lcd_output('Call cancelled', delay=2)
         self.lcd_output('')
         self.incoming_request = None
 

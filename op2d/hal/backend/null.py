@@ -31,6 +31,7 @@ class NullBackend(object):
         notification_center.add_observer(self, name='IncomingRequestReceived')
         notification_center.add_observer(self, name='IncomingRequestAccepted')
         notification_center.add_observer(self, name='IncomingRequestRejected')
+        notification_center.add_observer(self, name='IncomingRequestCancelled')
         notification_center.add_observer(self, name='SessionItemNewIncoming')
         notification_center.add_observer(self, name='SessionItemNewOutgoing')
         notification_center.add_observer(self, name='SessionItemDidChange')
@@ -42,6 +43,7 @@ class NullBackend(object):
         notification_center.remove_observer(self, name='IncomingRequestReceived')
         notification_center.remove_observer(self, name='IncomingRequestAccepted')
         notification_center.remove_observer(self, name='IncomingRequestRejected')
+        notification_center.remove_observer(self, name='IncomingRequestCancelled')
         notification_center.remove_observer(self, name='SessionItemNewIncoming')
         notification_center.remove_observer(self, name='SessionItemNewOutgoing')
         notification_center.remove_observer(self, name='SessionItemDidChange')
@@ -86,6 +88,13 @@ class NullBackend(object):
         log.msg('Incoming request rejected')
         self.incoming_request = None
         reactor.callLater(30, self._end_current_session)
+
+    def _NH_IncomingRequestCancelled(self, notification):
+        request = notification.sender
+        if request is not self.incoming_request:
+            return
+        log.msg('Incoming request cancelled')
+        self.incoming_request = None
 
     def _NH_SessionItemNewIncoming(self, notification):
         assert self.current_session is None
