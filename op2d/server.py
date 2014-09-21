@@ -18,6 +18,7 @@ from op2d.hal import HardwareAbstractionLayer
 from op2d.history import HistoryManager
 from op2d.resources import ApplicationData
 from op2d.sessions import SessionManager
+from op2d.tracing import TraceManager
 from op2d.web import WebHandler
 
 __all__ = ['OP2Daemon']
@@ -42,6 +43,7 @@ class OP2Daemon(object):
         self.hal = HardwareAbstractionLayer()
         self.history_manager = HistoryManager()
         self.session_manager = SessionManager()
+        self.trace_manager = TraceManager()
         self.web_handler = WebHandler()
 
     def start(self):
@@ -70,15 +72,19 @@ class OP2Daemon(object):
         handler = getattr(self, '_NH_%s' % notification.name, Null)
         handler(notification)
 
+    def _NH_SIPApplicationWillStart(self, notification):
+        self.trace_manager.start()
+        self.web_handler.start()
+
     def _NH_SIPApplicationDidStart(self, notification):
         log.msg('SIP application started')
-        self.web_handler.start()
 
     def _NH_SIPApplicationWillEnd(self, notification):
         self.web_handler.stop()
         self.stopping_event.set()
 
     def _NH_SIPApplicationDidEnd(self, notification):
+        self.trace_manager.stop()
         log.msg('SIP application ended')
         if not self.stopping_event.is_set():
             log.warning('SIP application ended without stopping all subsystems')
