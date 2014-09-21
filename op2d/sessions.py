@@ -35,6 +35,8 @@ class IncomingRequest(object):
         self.accepted_streams = None
         self.reject_mode = None
 
+        self._done = False
+
     def initialize(self, session, streams, new_session=True):
         self.session = session
         self.streams = streams
@@ -64,25 +66,35 @@ class IncomingRequest(object):
         return self.__dict__['ringtone']
 
     def accept(self):
-        if self.accepted_streams is not None:
+        if self._done:
             return
         self.accepted_streams = [next(stream for stream in self.streams if stream.type=='audio')]
         notification_center = NotificationCenter()
         notification_center.post_notification('IncomingRequestAccepted', sender=self)
+        self._done = True
 
     def reject(self):
-        if self.accepted_streams is not None:
+        if self._done:
             return
         self.reject_mode = 'reject'
         notification_center = NotificationCenter()
         notification_center.post_notification('IncomingRequestRejected', sender=self)
+        self._done = True
 
     def busy(self):
-        if self.accepted_streams is not None:
+        if self._done:
             return
         self.reject_mode = 'busy'
         notification_center = NotificationCenter()
         notification_center.post_notification('IncomingRequestRejected', sender=self)
+        self._done = True
+
+    def cancel(self):
+        if self._done:
+            return
+        notification_center = NotificationCenter()
+        notification_center.post_notification('IncomingRequestCancelled', sender=self)
+        self._done = True
 
 
 class SessionItem(object):
@@ -548,6 +560,7 @@ class SessionManager(object):
         except StopIteration:
             pass
         else:
+            incoming_session.cancel()
             self._incoming_proposals.remove(incoming_session)
             self.update_ringtone()
 
