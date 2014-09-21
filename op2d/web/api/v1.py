@@ -13,6 +13,7 @@ from werkzeug.routing import BaseConverter
 import op2d
 
 from op2d.accounts import AccountModel
+from op2d.history import HistoryManager
 from op2d.sessions import SessionManager
 from op2d.web.api.utils import error_response, get_state, get_json, jsonify, set_state
 
@@ -233,4 +234,25 @@ def dial():
         log.err()
         return error_response(400, str(e))
     return ''
+
+
+# History
+
+@app.route('/history')
+def history():
+    history_manager = HistoryManager()
+    entries = []
+    for entry in history_manager.calls:
+        if entry.name:
+            caller = '%s <%s>' % (entry.name, entry.uri)
+        else:
+            caller = entry.uri
+        entries.append(dict(direction=entry.direction,
+                            caller=caller,
+                            account=entry.account_id,
+                            call_time=str(entry.call_time.replace(microsecond=0)),
+                            duration=entry.duration.total_seconds() if entry.duration is not None else 0,
+                            failure=None if not entry.failed else entry.reason,
+                            text=entry.text))
+    return jsonify({'history': entries})
 
