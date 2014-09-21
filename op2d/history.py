@@ -6,9 +6,10 @@ import re
 from application.notification import IObserver, NotificationCenter
 from application.python import Null
 from application.python.types import Singleton
-from datetime import date, datetime
+from datetime import date
 from sipsimple.account import BonjourAccount
 from sipsimple.threading import run_in_thread
+from sipsimple.util import ISOTimestamp
 from zope.interface import implements
 
 from op2d.resources import ApplicationData
@@ -145,7 +146,7 @@ class HistoryEntry(object):
         if session.start_time is None and session.end_time is not None:
             # Session may have anded before it fully started
             session.start_time = session.end_time
-        call_time = session.start_time or datetime.now()
+        call_time = session.start_time or ISOTimestamp.now()
         if session.start_time and session.end_time:
             duration = session.end_time - session.start_time
         else:
