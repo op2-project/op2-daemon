@@ -86,13 +86,6 @@ class CharLCD(object):
 
         self.clear()
 
-
-    def begin(self, cols, lines):
-	if (lines > 1):
-		self.numlines = lines
-    		self.displayfunction |= self.LCD_2LINE
-		self.currline = 0
-
     def home(self):
 	self.write4bits(self.LCD_RETURNHOME) # set cursor position to zero
 	self.delayMicroseconds(3000) # this command takes a long time!
@@ -103,10 +96,8 @@ class CharLCD(object):
 
     def setCursor(self, col, row):
 	self.row_offsets = [ 0x00, 0x40, 0x14, 0x54 ]
-
-	if ( row > self.numlines ):
-		row = self.numlines - 1 # we count rows starting w/0
-
+	if row > self.numlines:
+	    row = self.numlines - 1 # we count rows starting w/0
 	self.write4bits(self.LCD_SETDDRAMADDR | (col + self.row_offsets[row]))
 
     def noDisplay(self):
