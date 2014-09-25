@@ -213,9 +213,9 @@ class TraceManager(object):
         if not settings.logs.trace_msrp:
             return
         arrow = {'incoming': '<--', 'outgoing': '-->'}[notification.data.direction]
-        local_address = notification.sender.getHost()
+        local_address = notification.data.local_address
         local_address = '%s:%d' % (local_address.host, local_address.port)
-        remote_address = notification.sender.getPeer()
+        remote_address = notification.data.remote_address
         remote_address = '%s:%d' % (remote_address.host, remote_address.port)
         message = '%s %s %s\n' % (local_address, arrow, remote_address) + notification.data.data
         try:
