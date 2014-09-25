@@ -6,7 +6,6 @@ from application import log
 from application.notification import IObserver, NotificationCenter
 from application.python import Null
 from sipsimple.configuration.settings import SIPSimpleSettings
-from sipsimple.streams import AudioStream
 from sipsimple.threading import run_in_thread, run_in_twisted_thread
 from twisted.internet import reactor
 from zope.interface import implements
