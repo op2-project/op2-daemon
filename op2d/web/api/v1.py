@@ -2,12 +2,12 @@
 import platform
 
 from application import log
-from application.system import unlink
 from flask import Flask, request, send_file
 from sipsimple.account import Account, BonjourAccount, AccountManager
 from sipsimple.configuration import DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
 from sipsimple.core import Engine
+from sipsimple.threading import run_in_thread
 from werkzeug.routing import BaseConverter
 
 import op2d
@@ -16,6 +16,7 @@ from op2d.accounts import AccountModel
 from op2d.history import HistoryManager
 from op2d.resources import ApplicationData
 from op2d.sessions import SessionManager
+from op2d.tracing import TraceManager
 from op2d.web.api.utils import error_response, get_state, get_json, jsonify, set_state
 
 __all__ = ['app']
@@ -271,6 +272,17 @@ def logs(logfile):
         except Exception as e:
             return error_response(500, str(e))
     elif request.method == 'DELETE':
-        unlink(ApplicationData.get('logs/%s.log' % logfile))
+        @run_in_thread('file-io')
+        def delete_file(logfile):
+            trace_manager = TraceManager()
+            if logfile == 'sip':
+                trace_manager.siptrace_file.truncate()
+            elif logfile == 'pjsip':
+                trace_manager.pjsiptrace_file.truncate()
+            elif logfile == 'msrp':
+                trace_manager.msrptrace_file.truncate()
+            elif logfile == 'notifications':
+                trace_manager.notifications_file.truncate()
+        delete_file(logfile)
         return ''
 

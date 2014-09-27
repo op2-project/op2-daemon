@@ -59,6 +59,10 @@ class LogFile(object):
     def write(self, string):
         self.file.write(string)
 
+    def truncate(self):
+        file = self.__dict__.get('file', Null)
+        file.truncate(0)
+
     def flush(self):
         file = self.__dict__.get('file', Null)
         file.flush()
