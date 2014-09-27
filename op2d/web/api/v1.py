@@ -8,7 +8,6 @@ from sipsimple.account import Account, BonjourAccount, AccountManager
 from sipsimple.configuration import DuplicateIDError
 from sipsimple.configuration.settings import SIPSimpleSettings
 from sipsimple.core import Engine
-from sipsimple.streams import AudioStream
 from werkzeug.routing import BaseConverter
 
 import op2d
