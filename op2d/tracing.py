@@ -61,9 +61,7 @@ class LogFile(object):
         self.file.flush()
 
     def truncate(self):
-        file = self.__dict__.get('file', Null)
-        file.truncate(0)
-
+        self.file.truncate(0)
 
     def close(self):
         file = self.__dict__.get('file', Null)
@@ -92,14 +90,10 @@ class TraceManager(object):
         settings = SIPSimpleSettings()
         notification_center = NotificationCenter()
         notification_center.add_observer(self)
-        if settings.logs.trace_sip:
-            self.siptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'sip.log'))
-        if settings.logs.trace_msrp:
-            self.msrptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'msrp.log'))
-        if settings.logs.trace_pjsip:
-            self.pjsiptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'pjsip.log'))
-        if settings.logs.trace_notifications:
-            self.notifications_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'notifications.log'))
+        self.siptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'sip.log'))
+        self.msrptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'msrp.log'))
+        self.pjsiptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'pjsip.log'))
+        self.notifications_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'notifications.log'))
         self._siptrace_start_time = datetime.now()
         self._siptrace_packet_count = 0
         self.event_queue = EventQueue(handler=self._process_notification, name='Log handling')
@@ -137,21 +131,8 @@ class TraceManager(object):
             message = 'Notification name=%s sender=%s data=%s' % (notification.name, notification.sender, pformat(notification.data))
             try:
                 self.notifications_file.write('%s [%s %d]: %s\n' % (datetime.now(), self.name, self.pid, message))
-                self.notifications_file.flush()
             except Exception:
                 pass
-
-    def _NH_CFGSettingsObjectDidChange(self, notification):
-        settings = SIPSimpleSettings()
-        if notification.sender is settings:
-            if 'logs.trace_sip' in notification.data.modified:
-                self.siptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'sip.log')) if settings.logs.trace_sip else Null
-            if 'logs.trace_msrp' in notification.data.modified:
-                self.msrptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'msrp.log')) if settings.logs.trace_msrp else Null
-            if 'logs.trace_pjsip' in notification.data.modified:
-                self.pjsiptrace_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'pjsip.log')) if settings.logs.trace_pjsip else Null
-            if 'logs.trace_notifications' in notification.data.modified:
-                self.notifications_file = LogFile(os.path.join(ApplicationData.directory, 'logs', 'notifications.log')) if settings.logs.trace_notifications else Null
 
     def _LH_SIPEngineSIPTrace(self, notification):
         settings = SIPSimpleSettings()
