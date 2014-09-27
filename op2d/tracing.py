@@ -58,14 +58,12 @@ class LogFile(object):
 
     def write(self, string):
         self.file.write(string)
+        self.file.flush()
 
     def truncate(self):
         file = self.__dict__.get('file', Null)
         file.truncate(0)
 
-    def flush(self):
-        file = self.__dict__.get('file', Null)
-        file.flush()
 
     def close(self):
         file = self.__dict__.get('file', Null)
@@ -171,7 +169,6 @@ class TraceManager(object):
         message = '\n'.join(buf)
         try:
             self.siptrace_file.write('%s [%s %d]: %s\n' % (notification.datetime, self.name, self.pid, message))
-            self.siptrace_file.flush()
         except Exception:
             pass
 
@@ -182,7 +179,6 @@ class TraceManager(object):
         message = "(%(level)d) %(message)s" % notification.data.__dict__
         try:
             self.pjsiptrace_file.write('[%s %d] %s\n' % (self.name, self.pid, message))
-            self.pjsiptrace_file.flush()
         except Exception:
             pass
 
@@ -208,7 +204,6 @@ class TraceManager(object):
             message += ' failed: %s' % message_map.get(notification.data.error.__class__, '')
         try:
             self.siptrace_file.write('%s [%s %d]: %s\n' % (notification.datetime, self.name, self.pid, message))
-            self.siptrace_file.flush()
         except Exception:
             pass
 
@@ -224,7 +219,6 @@ class TraceManager(object):
         message = '%s %s %s\n' % (local_address, arrow, remote_address) + notification.data.data
         try:
             self.msrptrace_file.write('%s [%s %d]: %s\n' % (notification.datetime, self.name, self.pid, message))
-            self.msrptrace_file.flush()
         except Exception:
             pass
 
@@ -237,7 +231,6 @@ class TraceManager(object):
         message = '%s%s' % (notification.data.level.prefix, notification.data.message)
         try:
             self.msrptrace_file.write('%s [%s %d]: %s\n' % (notification.datetime, self.name, self.pid, message))
-            self.msrptrace_file.flush()
         except Exception:
             pass
 
