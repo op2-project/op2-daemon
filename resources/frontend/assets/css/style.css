@@ -207,3 +207,65 @@ ol#audio_codecs li, ol#audio_codecs_general li {
   color: #b94a48;
 }
 
+.remove_logs_btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #777;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #e1e1e8;
+  border-radius: 0 4px 0 4px;
+}
+
+.remove_logs, .log_level{
+  position: relative;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .remove_logs, .log_level {
+    display: block;
+  }
+}
+
+.log_level_btn {
+  z-index: 10;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #777;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #e1e1e8;
+  border-radius: 4px 0 4px 0;
+}
+
+.log_level_c {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+}
+
+.panel-body pre {
+  margin:-16px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.nav-center > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+     zoom:1; /* hasLayout ie7 trigger */
+}
+
+.nav-center {
+    text-align:center;
+    margin-top:-1px;
+}

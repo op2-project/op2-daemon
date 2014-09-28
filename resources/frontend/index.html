@@ -56,7 +56,17 @@
                         <li><a href="#"><i class='icon-upload-alt'></i> File Transfer</a></li>
 -->
                         <li><a href="#dialing_tab" data-toggle="tab"><i class='icon-phone-sign'></i> Speed Dialing</a></li>
-                        <li><a href="#system_tab" data-toggle="tab"><i class='icon-desktop'></i> System</a></li>
+                        <li><a href="#histroy_tab" data-toggle="tab"><i class='icon-file-text-alt'></i> History</a></li>
+                        <li class="dropdown">
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class='icon-desktop'></i> System <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li><a href="#system_info_tab" data-toggle="tab"><i class='icon-info-sign'></i> Info</a></li>
+                            <li><a href="#system_logging_tab" data-toggle="tab"><i class='icon-file-text-alt'></i> Logging</a></li>
+                          </ul>
+                        </li>
+
                     </ul>
                     <form class="navbar-form">
                         <div class="input-group col-sm-3 col-md-3 col-lg-3 pull-right">
@@ -155,7 +165,7 @@
                                                 <div class="col-lg-offset-2 col-lg-10">
                                                     <div class="checkbox smaller">
                                                         <label class='control-label'>
-                                                          <input type="checkbox" name='rtp_inband_dtmf'> Send inband DTMF
+                                                            <input type="checkbox" name='rtp_inband_dtmf'> Send inband DTMF
                                                       </label>
                                                   </div>
                                                 </div>
@@ -305,7 +315,7 @@
                                     </form>
                                 </div>
 
-                                 <div class="tab-pane" id="account_advanced">
+                                <div class="tab-pane" id="account_advanced">
                                     <form class="form-horizontal" id="account_advanced_form" role="form">
                                         <fieldset>
                                             <legend>SIP Settings</legend>
@@ -457,55 +467,115 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <form class="form-horizontal" id="speed_dialing_form" role="form">
+                                <div class="form-group">
+                                    <label for="name_1" class="col-lg-1 control-label">Name</label>
+                                    <div class="col-lg-4">
+                                        <input type="text" class="form-control" id ='name_1' name='name_1'>
+                                    </div>
+                                    <label for="uri_1" class="col-lg-1 control-label">URI</label>
+                                    <div class="col-lg-5">
+                                        <input type="text" class="form-control" id='uri_1' name='uri_1'>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <button id='call_1' class="btn btn-primary pull-right">Call</button>
+                                    </div>
+                                </div>
 
-                                        <div class="form-group">
-                                            <label for="name_1" class="col-lg-1 control-label">Name</label>
-                                            <div class="col-lg-4">
-                                                <input type="text" class="form-control" id ='name_1' name='name_1'>
-                                            </div>
-                                            <label for="uri_1" class="col-lg-1 control-label">URI</label>
-                                            <div class="col-lg-5">
-                                                <input type="text" class="form-control" id='uri_1' name='uri_1'>
-                                            </div>
-                                            <div class="col-lg-1">
-                                                <button id='call_1' class="btn btn-primary pull-right">Call</button>
-                                            </div>
-                                        </div>
+                                <div class="form-group">
+                                    <label for="name_2" class="col-lg-1 control-label">Name</label>
+                                    <div class="col-lg-4">
+                                        <input type="text" class="form-control" id='name_2' name='name_2'>
+                                    </div>
+                                    <label for="uri_2" class="col-lg-1 control-label">URI</label>
+                                    <div class="col-lg-5">
+                                        <input type="text" class="form-control" id='uri_2' name='uri_2'>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <button id='call_2' class="btn btn-primary pull-right">Call</button>
+                                    </div>
+                                </div>
 
-                                        <div class="form-group">
-                                            <label for="name_2" class="col-lg-1 control-label">Name</label>
-                                            <div class="col-lg-4">
-                                                <input type="text" class="form-control" id='name_2' name='name_2'>
-                                            </div>
-                                            <label for="uri_2" class="col-lg-1 control-label">URI</label>
-                                            <div class="col-lg-5">
-                                                <input type="text" class="form-control" id='uri_2' name='uri_2'>
-                                            </div>
-                                            <div class="col-lg-1">
-                                                <button id='call_2' class="btn btn-primary pull-right">Call</button>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="name_3" class="col-lg-1 control-label">Name</label>
-                                            <div class="col-lg-4">
-                                                <input type="text" class="form-control" id='name_3' name='name_3'>
-                                            </div>
-                                            <label for="uri_3" class="col-lg-1 control-label">URI</label>
-                                            <div class="col-lg-5">
-                                                <input type="text" class="form-control" id ='uri_3' name='uri_3'>
-                                            </div>
-                                            <div class="col-lg-1">
-                                                <button id='call_3' class="btn btn-primary pull-right">Call</button>
-                                            </div>
-                                        </div>
-
+                                <div class="form-group">
+                                    <label for="name_3" class="col-lg-1 control-label">Name</label>
+                                    <div class="col-lg-4">
+                                        <input type="text" class="form-control" id='name_3' name='name_3'>
+                                    </div>
+                                    <label for="uri_3" class="col-lg-1 control-label">URI</label>
+                                    <div class="col-lg-5">
+                                        <input type="text" class="form-control" id ='uri_3' name='uri_3'>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <button id='call_3' class="btn btn-primary pull-right">Call</button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
 
-                <div id='system_tab' class="tab-pane fade">
+                <div class="tab-pane" id="system_logging_tab">
+                    <div class="page-header">
+                        <h1><i class='icon-file-text-alt'></i> Logging</h1>
+                    </div>
+                    <form class="form-horizontal" id="logging_form" role="form">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="trace_sip" id="trace_sip"> Trace SIP
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="trace_msrp" id="trace_msrp"> Trace MSRP
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="trace_pjsip" id="trace_pjsip"> Trace Core
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="checkbox" name="trace_notifications" id="trace_notifications"> Trace Notifications
+                            </label>
+                        </div>
+                    </form>
+
+                    <h3><i class='icon-file-text-alt'></i> Logs</h3>
+                    <div id="log_level" class="log_level">
+                        <div id='log_level_c' class="log_level_c">
+                            <select class="selectpicker" data-style="log_level_btn" data-width="auto" id="pjsip_level" name="pjsip_level">
+                                <option value="1">Level 1</option>
+                                <option value="2">Level 2</option>
+                                <option value="3">Level 3</option>
+                                <option value="4">Level 4</option>
+                                <option value="5">Level 5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='remove_logs'>
+                        <div class='remove_logs_btn'>
+                            <a id='clear_log'>Clear this Log</a>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-header">
+                            <ul class="nav nav-tabs nav-center" role="tablist" id='log_tabs'>
+                                <li><a href="#sip_log_tab" data-toggle="tab">SIP</a></li>
+                                <li><a href="#msrp_log_tab" data-toggle="tab">MSRP</a></li>
+                                <li><a href="#pjsip_log_tab" data-toggle="tab">Core</a></li>
+                                <li><a href="#notifications_log_tab" data-toggle="tab">Notifications</a></li>
+                            </ul>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div id='sip_log_tab' class="tab-pane fade active">
+                                </div>
+                                <div id='msrp_log_tab' class="tab-pane fade">
+                                </div>
+                                <div id='pjsip_log_tab' class="tab-pane fade">
+                                </div>
+                                <div id='notifications_log_tab' class="tab-pane fade">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='system_info_tab' class="tab-pane fade">
                     <div class="page-header">
                         <h1><i class='icon-desktop'></i> System</h1>
                     </div>
@@ -515,6 +585,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
             <div id='footer'>
                 <div class="container">
@@ -589,4 +660,3 @@
     <script src="/assets/js/application.js"></script>
 </body>
 </html>
-

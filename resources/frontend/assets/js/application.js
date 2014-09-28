@@ -8,45 +8,44 @@ var audio_codecs = {};
 
 (function ($) {
 
-     $.fn.serialize = function (options) {
-         return $.param(this.serializeArray(options));
-     };
+    $.fn.serialize = function (options) {
+        return $.param(this.serializeArray(options));
+    };
 
-     $.fn.serializeArray = function (options) {
-         var o = $.extend({
-         checkboxesAsBools: false
-     }, options || {});
+    $.fn.serializeArray = function (options) {
+        var o = $.extend({
+            checkboxesAsBools: false
+        }, options || {});
 
-     var rselectTextarea = /select|textarea/i;
-     var rinput = /text|hidden|password|search/i;
+        var rselectTextarea = /select|textarea/i;
+        var rinput = /text|hidden|password|search/i;
 
-     return this.map(function () {
-         return this.elements ? $.makeArray(this.elements) : this;
-     })
-     .filter(function () {
-         return this.name && !this.disabled &&
-             (this.checked ||
-             (o.checkboxesAsBools && this.type === 'checkbox') ||
-             rselectTextarea.test(this.nodeName) ||
-             rinput.test(this.type));
-         })
-         .map(function (i, elem) {
-             var val = $(this).val();
-             return val == null ?
-             null :
-             $.isArray(val) ?
-             $.map(val, function (val, i) {
-                 return { name: elem.name, value: val };
-             }) :
-             {
-                 name: elem.name,
-                 value: (o.checkboxesAsBools && this.type === 'checkbox') ? //moar ternaries!
-                        (this.checked ? true : false) :
-                        val
-             };
-         }).get();
-     };
-
+        return this.map(function () {
+            return this.elements ? $.makeArray(this.elements) : this;
+        })
+        .filter(function () {
+            return this.name && !this.disabled &&
+            (this.checked ||
+                (o.checkboxesAsBools && this.type === 'checkbox') ||
+                rselectTextarea.test(this.nodeName) ||
+                rinput.test(this.type));
+        })
+        .map(function (i, elem) {
+            var val = $(this).val();
+            return val == null ?
+            null :
+            $.isArray(val) ?
+            $.map(val, function (val, i) {
+                return { name: elem.name, value: val };
+            }):
+            {
+                name: elem.name,
+                value: (o.checkboxesAsBools && this.type === 'checkbox') ? //moar ternaries!
+                (this.checked ? true : false) :
+                val
+            };
+        }).get();
+    };
 })(jQuery);
 
 // overide serialize function
@@ -74,9 +73,25 @@ String.prototype.capitalize = function(lower) {
     return (lower ? this.toLowerCase() : this).replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 };
 
+var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+ };
+
+function escapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+        return entityMap[s];
+    });
+}
+
 function notifyError(data) {
     alertify.error("<strong>Error "+ data.responseJSON.msg.split(":")[0] +"</strong>:<br/> "+ data.responseJSON.msg.split(/:(.+)?/)[1]);
 }
+
 
 function getAccountId(){
     var account = $('[id^="account_"] .selected').clone();
@@ -119,14 +134,14 @@ function populateRegistration(index, value,reg_counter) {
             $('#account_'+index).append("<i class='pull-right icon-circle'></i>");
         } else {
             $('#account_'+index).append("<i class='pull-right icon-circle text-warning'></i>");
-            console.log("test "+ reg_counter);
+            //console.log("test "+ reg_counter);
             if (reg_counter !== 1) {
                 timeout = setTimeout(function() {
                     reg_counter=1;
                     populateRegistration(index, value, reg_counter);
                 },1000);
             } else {
-                console.log("here");
+                //console.log("here");
                 reg_counter=0;
             }
         }
@@ -232,8 +247,11 @@ function getSettings() {
     $.getJSON('api/v1/settings', function(data) {
         settings = data;
         getAccounts('account_list','account_info_form');
-        populateSpeedDial();
+        populateLogging();
         populateAudioDevices();
+        populateSpeedDial();
+
+        //populateLogging(settings);
         //setDefaultAccount();
     });
     $.getJSON('api/v1/system/audio_codecs', function(data) {
@@ -381,7 +399,7 @@ function updateField(value,value2,key,key1,account_id) {
             }
         }
 
-        console.log(data);
+        //console.log(data);
         var that = this;
         $.ajax({
             type: "PUT",
@@ -508,7 +526,7 @@ function populateAccountForms(frm, account_id, data) {
             key === 'msrp' ||
             key === 'pstn' ||
             key === 'message_summary' ||
-            key === 'xcap') {
+            key === 'xcap' ) {
             if (key !== 'display_name' && key !== 'enabled') {
                 $.each(value, function(key1,value2) {
                     if (key !== 'xcap' && key1 !== 'enabled') {
@@ -536,6 +554,43 @@ function populateSystemTab() {
             );
         });
     });
+}
+
+function populateLogging() {
+    $.each(settings.logs,function(key,value){
+        if (key.indexOf('trace') != -1) {
+          console.log("Finding/updating "+ key+ ' '+ value);
+          $("input[name="+ key + "]").val(value).prop('checked',value).unbind('change').bind('change', function(e) {
+            var that = this;
+                data = "{ \"logs\": ";
+                data = data + JSON.stringify($(this).serializeObject())+"}";
+                $.ajax({
+                    type: "PUT",
+                    url: "api/v1/settings",
+                    data: data,
+                    contentType: 'application/json',
+                    success: function(rdata) {
+                        $(that).closest('label').addClass('btn-success');
+                        timeout = setTimeout(function() {
+                            $(that).closest('label').removeClass('btn-success');
+                        },1000);
+                        getSettings();
+                        console.log("Updated logging" + data );
+                    },
+                    error: function(rdata){
+                        $(that).closest('label').addClass("btn-danger");
+                        console.log("Error");
+                        notifyError(rdata);
+                        //return false;
+                    }
+                });
+            });
+            if (value=== true) {
+                $("input[name="+ key + "]").closest('label').addClass('active');
+            }
+        }
+    });
+    $("[name=pjsip_level]").selectpicker('val', settings.logs.pjsip_level);
 }
 
 function updateSpeedDial(count, name,field) {
@@ -588,7 +643,7 @@ function updateAudioSettings(value,value2,key,key2) {
     $("select[name="+key2+"]").selectpicker('val',value).bind('change.myEvents', function() {
         data = "{\""+key+"\": " + JSON.stringify($(this).serializeObject())+"}";
 
-        console.log(data);
+        //console.log(data);
         var that = this;
         $.ajax({
             type: "PUT",
@@ -674,9 +729,77 @@ function populateAudioDevices() {
     });
 }
 
+function getLog(log_file) {
+    log = log_file.split('_');
+    log[0] = log[0].substr(1);
+    $.ajax({
+        type: "GET",
+        cache: false,
+        url: "api/v1/logs/"+log[0],
+        success: function(data) {
+            if(log[0] === 'sip') {
+                data = data.split('--\n').reverse().join('--\n');
+            } else {
+                data = data.split('\n').reverse().join('\n');
+            }
+            if (log[0] === 'pjsip'){
+                $('#log_level_c').show();
+                $('#pjsip_level').unbind('change.myEvents').bind('change.myEvents', function() {
+                    setLogLevel($(this));
+                });
+            }
+            $('#clear_log').unbind('click').bind('click', function(e) {
+                purgeLog(log[0]);
+            });
+            $(log_file).html("<pre class=pre-scrollable>"+escapeHtml(data)+"</pre>");
+        },
+        error: function() {
+            $(log_file).html('');
+        }
+    });
+}
+
+function setLogLevel(level){
+    data = "{\"logs\":"+JSON.stringify($(level).serializeObject())+"}";
+    $.ajax({
+        type: "PUT",
+        cache: false,
+        data: data,
+        url: "api/v1/settings",
+        contentType: 'application/json',
+        dataType:"json",
+        success: function(data){
+            $(level).parent().find('.bootstrap-select > button > .filter-option').addClass('text-success');
+            $(level).parent().find('.bootstrap-select > button').blur()
+            timeout = setTimeout(function() {
+                $(level).parent().find('.bootstrap-select > button > .filter-option').removeClass("text-success").blur();
+            },1000);
+        },
+        error: function(e) {
+            $(level).parent().find('.bootstrap-select > button > .filter-option').addClass('text-danger');
+            timeout = setTimeout(function() {
+                $(level).parent().find('.bootstrap-select > button > .filter-option').removeClass("btn-danger");
+            },1000);
+        }
+    });
+}
+
+function purgeLog(log_file) {
+    $.ajax({
+        type: "DELETE",
+        cache: false,
+        url: "api/v1/logs/"+log_file,
+        success: function(data){
+            alertify.success(log_file + " logs purged");
+            $('#'+log_file+"_log_tab").html("<pre class=pre-scrollable></pre>");
+        }
+    });
+}
+
 $(document).ready(function() {
     getSettings();
 
+    var inittab=0;
     $('select').selectpicker();
 
     $('#reregister').click(function(event){
@@ -833,15 +956,32 @@ $(document).ready(function() {
 
     $("ol#audio_codecs_general").sortable();
 
+    var refreshId='';
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
         console.log(e.target); // activated tab
-        if ( $(e.target).attr('href') == "#system_tab" ) {
+        if ( $(e.target).attr('href') == "#system_info_tab" ) {
             populateSystemTab();
         } else if ( $(e.target).attr('href') == "#start_tab" ) {
             $('.navbar-nav li').removeClass('active');
         } else if ( $(e.target).attr('href') == "#audio_tab" ) {
             //populateAudioCodecs();
             populateAudioDevices();
+        } else if ( $(e.target).attr('href') == "#system_logging_tab" ) {
+            if (inittab =='0'){
+              console.log("Enabling SIP tab");
+              init=1;
+              getLog('#sip_log_tab');
+              $('#log_tabs a[href="#sip_log_tab"]').tab('show');
+            }
+        } else if ( $(e.target).attr('href').indexOf('log_tab') != -1 ) {
+            //console.log($(e.target).attr('href'));
+            clearInterval(refreshId);
+            $('#log_level_c').hide();
+            getLog($(e.target).attr('href'));
+            refreshId = setInterval(function()
+            {
+              getLog($(e.target).attr('href'));
+            }, 10000);
         }
         //e.relatedTarget // previous tab
     });
@@ -874,7 +1014,7 @@ $(document).ready(function() {
         });
     });
 
-     $('#account_add_form').on('submit', function(event){
+    $('#account_add_form').on('submit', function(event){
         event.preventDefault();
         var display_name = $(this).find("input[name='display_name1']").val();
         var pass = $(this).find("input[name='password1']").val();
