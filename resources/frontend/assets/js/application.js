@@ -621,12 +621,14 @@ function populateSpeedDial() {
         updateSpeedDial(i, "","name");
         updateSpeedDial(i, "","uri");
     }
-    $.each(settings.op2.speed_dialing, function(index,value){
-        count++;
-        value = value.split('|');
-        updateSpeedDial(count, value[0],"name");
-        updateSpeedDial(count, value[1],"uri");
-    });
+    if (settings.op2.speed_dialing) {
+      $.each(settings.op2.speed_dialing, function(index,value){
+          count++;
+          value = value.split('|');
+          updateSpeedDial(count, value[0],"name");
+          updateSpeedDial(count, value[1],"uri");
+      });
+    }
 }
 
 function populateAudioDevices() {
