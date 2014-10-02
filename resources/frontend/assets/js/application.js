@@ -127,13 +127,13 @@ function populateRegistration(index, value,reg_counter) {
 
     $.getJSON('api/v1/accounts/'+value.id+'/info', function(data1) {
         if (data1.info.registration.state === 'succeeded') {
-            $('#account_'+index).append("<i class='pull-right icon-circle text-success'></i>");
+            $('#account_'+index).append("<i class='pull-right fa fa-circle text-success'></i>");
         } else if (data1.info.registration.state === 'failed') {
-            $('#account_'+index).append("<i class='pull-right icon-circle text-danger'></i>");
+            $('#account_'+index).append("<i class='pull-right fa fa-circle text-danger'></i>");
         } else if ( data1.info.registration.state === "ended" && value.enabled === true) {
-            $('#account_'+index).append("<i class='pull-right icon-circle'></i>");
+            $('#account_'+index).append("<i class='pull-right fa fa-circle'></i>");
         } else {
-            $('#account_'+index).append("<i class='pull-right icon-circle text-warning'></i>");
+            $('#account_'+index).append("<i class='pull-right fa fa-circle text-warning'></i>");
             //console.log("test "+ reg_counter);
             if (reg_counter !== 1) {
                 timeout = setTimeout(function() {
@@ -192,8 +192,8 @@ function getAccounts(target_id,form, change, rdata) {
         $('#'+target_id).empty().html(
             "<li style='margin-right:4px'>"+
                 "<div id='account_buttons' class='btn-group btn-group-xs pull-right'>"+
-                    "<button id='add_account' data-toggle='modal' href='#myModal' class='btn btn-primary'><i class='icon-fixed-width icon-plus'></i></button>"+
-                    "<button id='remove_account' class='btn btn-default btn-disabled' disabled><i class=' icon-fixed-width icon-minus'></i></button>"+
+                    "<button id='add_account' data-toggle='modal' href='#myModal' class='btn btn-primary'><i class='fa fa-fw fa-plus'></i></button>"+
+                    "<button id='remove_account' class='btn btn-default btn-disabled' disabled><i class='fa fa-fw fa-minus'></i></button>"+
                 "</div>"+
             "</li>"
         );

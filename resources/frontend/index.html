@@ -42,28 +42,26 @@
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <span class="fa fa-bars fa-lg"></span>
                 </button>
                 <a class="navbar-brand" href="#start_tab" data-toggle="tab">OP<sup>2</sup></a>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="#account_tab" data-toggle="tab"><i class='icon-group'></i> Accounts</a></li>
-                        <li><a href="#audio_tab" data-toggle="tab"><i class='icon-headphones'></i> Audio</a></li>
+                        <li><a href="#account_tab" data-toggle="tab"><i class='fa fa-group'></i> Accounts</a></li>
+                        <li><a href="#audio_tab" data-toggle="tab"><i class='fa fa-headphones'></i> Audio</a></li>
 <!--
-                        <li><a href="#"><i class='icon-keyboard'></i> Chat</a></li>
-                        <li><a href="#"><i class='icon-upload-alt'></i> File Transfer</a></li>
+                        <li><a href="#"><i class='fa fa-keyboard'></i> Chat</a></li>
+                        <li><a href="#"><i class='fa fa-upload-alt'></i> File Transfer</a></li>
 -->
-                        <li><a href="#dialing_tab" data-toggle="tab"><i class='icon-phone-sign'></i> Speed Dialing</a></li>
-                        <li><a href="#histroy_tab" data-toggle="tab"><i class='icon-file-text-alt'></i> History</a></li>
+                        <li><a href="#dialing_tab" data-toggle="tab"><i class='fa fa-phone-square'></i> Speed Dialing</a></li>
+                        <li><a href="#history_tab" data-toggle="tab"><i class='fa fa-history'></i> History</a></li>
                         <li class="dropdown">
                           <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class='icon-desktop'></i> System <span class="caret"></span>
+                            <i class='fa fa-desktop'></i> System <span class="caret"></span>
                           </a>
                           <ul class="dropdown-menu" role="menu">
-                            <li><a href="#system_info_tab" data-toggle="tab"><i class='icon-info-sign'></i> Info</a></li>
-                            <li><a href="#system_logging_tab" data-toggle="tab"><i class='icon-file-text-alt'></i> Logging</a></li>
+                            <li><a href="#system_info_tab" data-toggle="tab"><i class='fa fa-fw fa-info-circle'></i> Info</a></li>
+                            <li><a href="#system_logging_tab" data-toggle="tab"><i class='fa fa-fw fa-files-o'></i> Logging</a></li>
                           </ul>
                         </li>
 
@@ -104,7 +102,7 @@
 
                 <div id='account_tab' class="tab-pane fade">
                     <div class="page-header">
-                        <h1><i class='icon-group'></i> Accounts</h1>
+                        <h1><i class='fa fa-group'></i> Accounts</h1>
                     </div>
                     <div class='row'>
                         <div class="col-md-3 bs-sidebar">
@@ -337,7 +335,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-2">
-                                                    <button id='reregister' data-loading-text="Re-registering" class="btn btn-primary"><i class='icon-refresh'></i> Re-register</button>
+                                                    <button id='reregister' data-loading-text="Re-registering" class="btn btn-primary"><i class='fa fa-refresh'></i> Re-register</button>
                                                 </div>
                                             </div>
 
@@ -405,7 +403,7 @@
 
                 <div id='audio_tab' class="tab-pane fade">
                     <div class="page-header">
-                        <h1><i class='icon-headphones'></i> Audio</h1>
+                        <h1><i class='fa fa-headphones'></i> Audio</h1>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
@@ -414,7 +412,7 @@
                                     <legend>Audio Devices</legend>
 <!--                                     <div class='row'>
                                         <div class="col-lg-offset-2 col-lg-10">
-                                            <button id='refresh' data-loading-text="Refreshing" style='width:350px' class="btn btn-primary"><i class='icon-refresh'></i> Refresh Auido devices</button>
+                                            <button id='refresh' data-loading-text="Refreshing" style='width:350px' class="btn btn-primary"><i class='fa fa-refresh'></i> Refresh Auido devices</button>
                                             <br/><br/>
                                         </div>
                                     </div> -->
@@ -441,7 +439,7 @@
                                     </div>
                                     <div class='row'>
                                         <div class="col-lg-offset-2 col-lg-10">
-                                            <button id='refresh' data-loading-text="Refreshing" style='width:350px' class="btn btn-primary"><i class='icon-refresh'></i> Refresh Auido devices</button>
+                                            <button id='refresh' data-loading-text="Refreshing" style='width:350px' class="btn btn-primary"><i class='fa fa-refresh'></i> Refresh Auido devices</button>
                                             <br/><br/>
                                         </div>
                                     </div>
@@ -462,7 +460,7 @@
 
                 <div id='dialing_tab' class="tab-pane fade">
                     <div class="page-header">
-                        <h1><i class='icon-phone-sign'></i> Speed Dialing</h1>
+                        <h1><i class='fa fa-phone-square'></i> Speed Dialing</h1>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
@@ -515,7 +513,7 @@
 
                 <div class="tab-pane" id="system_logging_tab">
                     <div class="page-header">
-                        <h1><i class='icon-file-text-alt'></i> Logging</h1>
+                        <h1><i class='fa fa-files-o'></i> Logging</h1>
                     </div>
                     <form class="form-horizontal" id="logging_form" role="form">
                         <div class="btn-group" data-toggle="buttons">
@@ -534,7 +532,7 @@
                         </div>
                     </form>
 
-                    <h3><i class='icon-file-text-alt'></i> Logs</h3>
+                    <h3><i class='fa fa-file-text-o'></i> Logs</h3>
                     <div id="log_level" class="log_level">
                         <div id='log_level_c' class="log_level_c">
                             <select class="selectpicker" data-style="log_level_btn" data-width="auto" id="pjsip_level" name="pjsip_level">
@@ -577,9 +575,9 @@
 
                 <div id='system_info_tab' class="tab-pane fade">
                     <div class="page-header">
-                        <h1><i class='icon-desktop'></i> System</h1>
+                        <h1><i class='fa fa-desktop'></i> System</h1>
                     </div>
-                    <h2><i class='icon-info-sign'></i> Info</h2>
+                    <h2><i class='fa fa-info-circle'></i> Info</h2>
                     <div class='row'>
                         <div class="col-lg-12" id='system_info'>
                         </div>
