@@ -797,6 +797,61 @@ function purgeLog(log_file) {
     });
 }
 
+function getHistory(){
+    $.ajax({
+        type: "GET",
+        cache: false,
+        url: "api/v1/history",
+        success: function(data){
+            populateHistory(data);
+        }
+    });
+}
+
+function msToTime(duration) {
+    var seconds = parseInt((duration)%60),
+        minutes = parseInt((duration/60)%60),
+          hours = parseInt((duration/(60*60))%24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return hours + ":" + minutes + ":" + seconds;
+}
+
+function populateHistory(history) {
+    $('#outgoing').html('');
+    $('#incoming').html('');
+
+    $.each(history.history.reverse(), function(key,value) {
+        var time = new Date(value.call_time);
+        var today = new Date();
+
+        if (today.getDate() === time.getDate() && time.getMonth() == today.getMonth() && time.getFullYear() == today.getFullYear()) {
+            dateString = '<span class="label label-primary">Today</span> '+value.call_time.split(' ')[1];
+        } else if (today.getDate()-1 === time.getDate() && time.getMonth() == today.getMonth()-1 && time.getFullYear() == today.getFullYear()-1) {
+            dateString = '<span class="label label-default">Yesterday</span> '+value.call_time.split(' ')[1];
+        } else {
+            dateString = value.call_time
+        }
+
+        var dur = msToTime(parseInt(value.duration,10));
+        rclass='';
+        error = '';
+        if (value.failure) {
+            rclass='danger';
+            dur = '<span class="label label-danger">'+value.failure+'</span>';
+        } else  if (value.duration === 0) {
+            rclass='info';
+            dur = '<span class="label label-info">Missed</span>';
+        }
+        $('#'+value.direction).append('<tr class='+rclass+'><td class="text-right col-lg-3">'+dateString+'</td><td class="col-lg-6">'+value.caller+'<br/><span class="badge"><i class="fa fa-tag"></i> '+value.account+'</span></td><td class="col-lg-3 text-right">'+dur+'</td></tr>')
+
+    });
+}
+
+
 $(document).ready(function() {
     getSettings();
 
@@ -967,6 +1022,8 @@ $(document).ready(function() {
         } else if ( $(e.target).attr('href') == "#audio_tab" ) {
             //populateAudioCodecs();
             populateAudioDevices();
+        } else if ( $(e.target).attr('href')== "#history_tab") {
+            getHistory();
         } else if ( $(e.target).attr('href') == "#system_logging_tab" ) {
             if (inittab =='0'){
               console.log("Enabling SIP tab");
