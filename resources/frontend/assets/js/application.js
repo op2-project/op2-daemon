@@ -751,6 +751,7 @@ function getLog(log_file) {
             $('#clear_log').unbind('click').bind('click', function(e) {
                 purgeLog(log[0]);
             });
+            $('#download_log').attr("href", "api/v1/logs/"+log[0]);
             $(log_file).html("<pre class=pre-scrollable>"+escapeHtml(data)+"</pre>");
         },
         error: function() {

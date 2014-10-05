@@ -222,6 +222,12 @@ ol#audio_codecs li, ol#audio_codecs_general li {
   border-radius: 0 4px 0 4px;
 }
 
+#download_log {
+  border-right: 1px solid #e1e1e8;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right:5px;
+}
 .remove_logs, .log_level{
   position: relative;
   display: none;
