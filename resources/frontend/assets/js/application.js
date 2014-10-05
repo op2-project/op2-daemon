@@ -73,6 +73,7 @@ String.prototype.capitalize = function(lower) {
     return (lower ? this.toLowerCase() : this).replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 };
 
+// Entity map for escaping
 var entityMap = {
     "&": "&amp;",
     "<": "&lt;",
@@ -878,7 +879,7 @@ $(document).ready(function() {
 
     $('button[id^="call_"]').click(function(event){
 
-        console.log("call");
+        console.log("Placing call");
         var account = $('[name="nav_account_list"]').val();
         event.preventDefault();
         var that = this ;
@@ -909,7 +910,7 @@ $(document).ready(function() {
 
     $('button[id^="general_call"]').click(function(event){
 
-        console.log("Call form nav");
+        console.log("Placing call");
         var account = $('[name="nav_account_list"]').val();
         event.preventDefault();
         var that = this ;
