@@ -867,7 +867,7 @@ function populateHistory(history) {
             rclass='info';
             dur = '<span class="label label-info">Missed</span>';
         }
-        $('#'+value.direction).append('<tr class='+rclass+'><td class="text-right col-lg-3">'+dateString+'</td><td class="col-lg-6">'+value.caller+'<br/><span class="badge"><i class="fa fa-tag"></i> '+value.account+'</span></td><td class="col-lg-3 text-right">'+dur+'</td></tr>')
+        $('#'+value.direction).append('<tr class='+rclass+'><td class="text-right col-lg-3">'+dateString+'</td><td class="col-lg-6">'+escapeHtml(value.caller)+'<br/><span class="badge"><i class="fa fa-tag"></i> '+value.account+'</span></td><td class="col-lg-3 text-right">'+dur+'</td></tr>')
 
     });
 }
