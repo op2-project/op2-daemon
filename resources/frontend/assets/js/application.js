@@ -821,6 +821,26 @@ function msToTime(duration) {
     return hours + ":" + minutes + ":" + seconds;
 }
 
+function formatDate(date) {
+    var m_names = new Array("January", "February", "March",
+    "April", "May", "June", "July", "August", "September",
+    "October", "November", "December");
+
+    var d = date;
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    var curr_date = d.getDate();
+    var curr_month = d.getMonth();
+    var curr_year = d.getFullYear();
+    return curr_date + " " + m_names[curr_month]
+    + " " + curr_year +" "+ hours +":"+minutes+":"+seconds;
+}
+
 function populateHistory(history) {
     $('#outgoing').html('');
     $('#incoming').html('');
@@ -830,11 +850,11 @@ function populateHistory(history) {
         var today = new Date();
 
         if (today.getDate() === time.getDate() && time.getMonth() == today.getMonth() && time.getFullYear() == today.getFullYear()) {
-            dateString = '<span class="label label-primary">Today</span> '+value.call_time.split(' ')[1];
+            dateString = '<span class="label label-primary">Today</span> '+time.getHours() +':'+ time.getMinutes() +':'+ time.getSeconds();
         } else if (today.getDate()-1 === time.getDate() && time.getMonth() == today.getMonth()-1 && time.getFullYear() == today.getFullYear()-1) {
-            dateString = '<span class="label label-default">Yesterday</span> '+value.call_time.split(' ')[1];
+            dateString = '<span class="label label-default">Yesterday</span> '+time.getHours() +':'+ time.getMinutes() +':'+ time.getSeconds();
         } else {
-            dateString = value.call_time
+            dateString = formatDate(time);
         }
 
         var dur = msToTime(parseInt(value.duration,10));
