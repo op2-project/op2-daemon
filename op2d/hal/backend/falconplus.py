@@ -54,7 +54,7 @@ class FalconPlusBackend(object):
         self.lcd = None
 
     def initialize(self):
-        log.msg('Falcon HAL backend initialized')
+        log.msg('FalconPlus HAL backend initialized')
 
         # Initialize GPIO
         GPIO.setmode(GPIO.BCM)
