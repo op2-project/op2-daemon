@@ -13,6 +13,9 @@ def get_version():
 def find_packages(toplevel):
     return [directory.replace(os.path.sep, '.') for directory, subdirs, files in os.walk(toplevel) if '__init__.py' in files]
 
+def list_resources(directory, destination_directory):
+    return [(dir.replace(directory, destination_directory), [os.path.join(dir, file) for file in files]) for dir, subdirs, files in os.walk(directory)]
+
 setup(name         = "op2d",
       version      = get_version(),
       author       = "Saúl Ibarra Corretgé",
@@ -26,15 +29,7 @@ setup(name         = "op2d",
             "Programming Language :: Python"
                      ],
       packages     = find_packages('op2d'),
-      package_data = {
-          'op2d.web.frontend': ['templates/*.html',
-                                'templates/assets/css/*',
-                                'templates/assets/font/*',
-                                'templates/assets/images/*',
-                                'templates/assets/js/*']
-      },
-      scripts      = ['op2-daemon'],
-      data_files   = [('/var/spool/op2d', []),
-                      ('share/op2d/sounds', glob.glob(os.path.join('resources', 'sounds', '*.wav')))]
+      data_files   = list_resources('resources', 'share/op2d'),
+      scripts      = ['op2-daemon']
       )
 
