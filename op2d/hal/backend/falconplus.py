@@ -18,31 +18,30 @@ from op2d.sessions import SessionManager
 __all__ = ['Backend']
 
 
-TODO = None
 # Only Raspberry Pi B+ is supported by this backend.
 #
 # All references here use the BCM pinout, *not*
 # the BOARD pinout.
 
-ANSWER_BTN = TODO
-HANGUP_BTN = TODO
-INFO_BTN   = TODO
-SD1_BTN    = TODO
-SD2_BTN    = TODO
-SD3_BTN    = TODO
+ANSWER_BTN = 11
+HANGUP_BTN = 10
+INFO_BTN   = 9
+SD1_BTN    = 17
+SD2_BTN    = 27
+SD3_BTN    = 22
 
-# Status LED (also uses the BCM pinout)
-STATUS_LED = TODO
+# Status LEDs
+STATUS_LEDS = []
 
 # LCD pins, note that LCD is connected to a MCP23017
 
-LCD_PIN_RS    = TODO
-LCD_PIN_E     = TODO
-LCD_DATA_PINS = [TODO, TODO, TODO, TODO]
+LCD_PIN_RS    = 21
+LCD_PIN_E     = 20
+LCD_DATA_PINS = [12, 7, 8, 25]
 
-# Use 200ms bounce time, seems to work fine
+# Use 350ms bounce time, seems to work fine
 
-BTN_BOUNCETIME = 200
+BTN_BOUNCETIME = 350
 
 
 class FalconPlusBackend(object):
@@ -72,8 +71,9 @@ class FalconPlusBackend(object):
         GPIO.setup(SD2_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.setup(SD3_BTN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-        # Status LED
-        GPIO.setup(STATUS_LED, GPIO.OUT)
+        # Status LEDs
+        for led in STATUS_LEDS:
+            GPIO.setup(led, GPIO.OUT)
 
     def start(self):
         log.msg('FalconPlus HAL backend started')
@@ -95,7 +95,8 @@ class FalconPlusBackend(object):
         GPIO.add_event_detect(SD2_BTN, GPIO.RISING, callback=self.handle_button_press, bouncetime=BTN_BOUNCETIME)
         GPIO.add_event_detect(SD3_BTN, GPIO.RISING, callback=self.handle_button_press, bouncetime=BTN_BOUNCETIME)
 
-        GPIO.output(STATUS_LED, 1)
+        for led in STATUS_LEDS:
+            GPIO.output(led, 1)
 
     def stop(self):
         log.msg('FalconPlus HAL backend stopped')
