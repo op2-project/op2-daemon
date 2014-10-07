@@ -48,7 +48,6 @@ class OP2Daemon(object):
 
     def start(self):
         self.account_model.start()
-        self.bonjour_services.start()
         self.hal.start()
         self.history_manager.start()
         self.session_manager.start()
@@ -73,6 +72,7 @@ class OP2Daemon(object):
         handler(notification)
 
     def _NH_SIPApplicationWillStart(self, notification):
+        self.bonjour_services.start()
         self.trace_manager.start()
         self.web_handler.start()
 
